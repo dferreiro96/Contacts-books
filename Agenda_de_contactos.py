@@ -1,6 +1,7 @@
 #agenda de contactos. pedir nombres y telefonos hasta que el usuario escriba "fin"
 # Guardar en diccionario y mostrar al final.
-# \n << >>
+#Funciones a añadir
+
 
 jugar= True
 while jugar:
