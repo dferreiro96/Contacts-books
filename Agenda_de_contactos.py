@@ -1,9 +1,11 @@
 #agenda de contactos. pedir nombres y telefonos hasta que el usuario escriba "fin"
 # Guardar en diccionario y mostrar al final.
-#Funciones a añadir
+#Funciones a añadir: agregar_contacto, buscar_contacto, eliminar_contacto, mostrar_agenda
+#main() con menú
 
-
-jugar= True
+def agregar_contacto():
+    
+jugar = True
 while jugar:
     dicc={}
     print("\nEsta es una agenda de contactos. Binvenido")
