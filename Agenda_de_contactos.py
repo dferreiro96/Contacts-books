@@ -85,8 +85,15 @@ class Agenda:
 
     def buscar_contacto_por_numero(self, telefono):
         encontrado = False
+        str_telefono = str(telefono)
+        if len(str_telefono) == 8:
+            telefono_formateado = (
+                f"+53 {str_telefono[:1]}-{str_telefono[1:4]}-{str_telefono[4:]}"
+            )
+        else:
+            telefono_formateado = telefono
         for contacto in self.lista_de_contactos:
-            if contacto.telefono == telefono:
+            if contacto.telefono == telefono_formateado:
                 return f"\n{contacto}"
         if not encontrado:
             return "\nContacto no existe"
@@ -169,21 +176,33 @@ class Agenda:
 
     def mostrar_contactos_laborales(self):
         contactos_laborales = []
+        encontrado = False
         for contacto in self.lista_de_contactos:
             if contacto.devolver_tipo() == "ContactoLaboral":
+                encontrado = True
                 contactos_laborales.append(contacto)
-        ordenados = sorted(contactos_laborales, key=lambda x: x.nombre)
-        for i, contacto in enumerate(ordenados, start=1):
-            print(f"\n{i}. {contacto}")
+        if encontrado:
+            ordenados = sorted(contactos_laborales, key=lambda x: x.nombre)
+            print("\nLista de contactos laborales: ")
+            for i, contacto in enumerate(ordenados, start=1):
+                print(f"\n{i}. {contacto}")
+        else:
+            print("\nNo se encontraron contactos laborales")
 
     def mostrar_contactos_personales(self):
+        encontrado = False
         contactos_personales = []
         for contacto in self.lista_de_contactos:
             if contacto.devolver_tipo() == "ContactoPersonal":
+                encontrado = True
                 contactos_personales.append(contacto)
-        ordenados = sorted(contactos_personales, key=lambda x: x.nombre)
-        for i, contacto in enumerate(ordenados, start=1):
-            print(f"\n{i}. {contacto}")
+        if encontrado:
+            ordenados = sorted(contactos_personales, key=lambda x: x.nombre)
+            print("\nLista de contactos familiares: ")
+            for i, contacto in enumerate(ordenados, start=1):
+                print(f"\n{i}. {contacto}")
+        else:
+            print("\nNo se encontraron contactos familiares")
 
     def mostrar_etiquetas_de_un_contacto(self, nombre):
         for contacto in self.lista_de_contactos:
@@ -207,7 +226,7 @@ class Agenda:
             diccionario = contacto.__dict__.copy()
             diccionario["Tipo"] = contacto.devolver_tipo()
             if isinstance(contacto, ContactoPersonal):
-                diccionario["cumpleaños"] = contacto.cumpleaños.strftime("%d-%m-%Y")
+                diccionario["cumpleaños"] = contacto.cumpleaños.strftime("%d/%m/%Y")
             lista_de_diccionarios.append(diccionario)
         return lista_de_diccionarios
 
@@ -260,7 +279,7 @@ class Agenda:
                     }
                 )
             print(
-                "\nSe han exportado los datos correctamente al archivo llamado 'Agenda de contactos.csv'\n"
+                "\nSe han exportado los datos correctamente al archivo llamado 'Agenda de contactos.csv'"
             )
 
     def descargar_datos(self):
@@ -286,7 +305,7 @@ class Agenda:
                         lista_reconstituida.append(nuevo_contacto)
                     else:
                         fecha_del_cumpleaños = datetime.strptime(
-                            cumpleaños, "%d-%m-%Y"
+                            cumpleaños, "%d/%m/%Y"
                         ).date()
                         nuevo_contacto_personal = ContactoPersonal(
                             nombre, telefono, correo, fecha_del_cumpleaños, parentesco
@@ -323,11 +342,11 @@ def pedir_etiqueta():
 
 
 def pedir_empresa():
-    return input("\nNombre de la empresa: ").strip().title()
+    return input("\nNombre de la empresa: ").strip()
 
 
 def pedir_cargo():
-    return input("\nCargo que ocupa: ").strip().title()
+    return input("\nCargo que ocupa: ").strip()
 
 
 def pedir_telefono():
@@ -351,14 +370,14 @@ def pedir_correo_electronico():
 def pedir_fecha_cumple():
     while True:
         fecha_str = input(
-            "\nIntroduce la fecha de cumpleaños del contacto (DD-MM-AAAA): "
+            "\nIntroduce la fecha de cumpleaños del contacto (DD/MM/AAAA): "
         )
         try:
-            fecha_valida = datetime.strptime(fecha_str, "%d-%m-%Y").date()
+            fecha_valida = datetime.strptime(fecha_str, "%d/%m/%Y").date()
             return fecha_valida
         except ValueError:
             print(
-                "\nError: Fecha no válida. Asegúrate de usar el formato DD-MM-AA y que la fecha exista."
+                "\nError: Fecha no válida. Asegúrate de usar el formato DD/MM/AA y que la fecha exista."
             )
 
 
@@ -387,6 +406,7 @@ def menu_tipo_de_contacto():
     print("\n____AÑADIR CONTACTO_____\n")
     print("1. Contacto familiar")
     print("2. Contacto laboral")
+    print("3. Salir")
 
 
 def menu_mostrar_tipo_de_contacto():
@@ -394,6 +414,7 @@ def menu_mostrar_tipo_de_contacto():
     print("1. Todos los contactos")
     print("2. Contactos familiares")
     print("3. Contactos laborales")
+    print("4. Salir")
 
 
 def menu_filtar_contactos():
@@ -401,12 +422,14 @@ def menu_filtar_contactos():
     print("1. Buscar por nombre")
     print("2. Buscar por número de teléfono")
     print("3. Buscar por etiqueta")
+    print("4. Salir")
 
 
 def menu_eliminar_contacto():
     print("\n____Eliminar contacto_____\n")
     print("1. Eliminar por nombre")
     print("2. Eliminar por número de teléfono")
+    print("3. Salir")
 
 
 def menu_editar():
@@ -422,6 +445,7 @@ def menu_editar_por():
     print("3. Editar correo electrónico")
     print("4. Editar fecha de cumpleaños")
     print("5. Editar etiquetas")
+    print("6. Salir")
 
 
 def menu_editar_etiquetas():
@@ -466,12 +490,13 @@ def programa():
         match opcion:
             case 1:
                 menu_tipo_de_contacto()
-                seleccion = pedir_opcion([1, 2])
+                seleccion = pedir_opcion([1, 2, 3])
+                if seleccion == 3:
+                    continue
                 nombre = pedir_nombre()
                 resultado = mi_agenda.comprobar_nombre(nombre)
                 if resultado:
                     continue
-
                 telefono = pedir_telefono()
                 telefono_formateado = formatear_numero_de_telefono(telefono)
                 correo = pedir_correo_electronico()
@@ -482,7 +507,6 @@ def programa():
                     mi_contacto = ContactoPersonal(
                         nombre, telefono_formateado, correo, cumpleaños, parentesco
                     )
-                    print(f"\nContacto {mi_contacto.nombre} agregado correctamente")
 
                 else:
                     empresa = pedir_empresa()
@@ -490,30 +514,30 @@ def programa():
                     mi_contacto = ContactoLaboral(
                         nombre, telefono_formateado, correo, empresa, cargo
                     )
-                    print(f"\nContacto {mi_contacto.nombre} agregado correctamente")
-
                 mi_agenda.agregar_contacto(mi_contacto)
-                if mi_agenda.agregar_contacto:
-                    mi_agenda.guardar_json()
+                mi_agenda.guardar_json()
+                print(f"\nContacto {mi_contacto.nombre} agregado correctamente")
 
             case 2:
                 if not mi_agenda.lista_de_contactos:
                     print("\nAún no ha guardado ningún contacto")
                 else:
                     menu_mostrar_tipo_de_contacto()
-                    opcion = pedir_opcion([1, 2, 3])
+                    opcion = pedir_opcion([1, 2, 3, 4])
                     if opcion == 1:
                         mi_agenda.mostrar_agenda()
                     elif opcion == 2:
                         mi_agenda.mostrar_contactos_personales()
-                    else:
+                    elif opcion == 3:
                         mi_agenda.mostrar_contactos_laborales()
+                    else:
+                        pass
             case 3:
                 if not mi_agenda.lista_de_contactos:
                     print("\nAún no ha guardado ningún contacto")
                 else:
                     menu_filtar_contactos()
-                    opcion = pedir_opcion([1, 2, 3])
+                    opcion = pedir_opcion([1, 2, 3, 4])
                     if opcion == 1:
                         nombre = pedir_nombre()
                         contacto_buscado = mi_agenda.buscar_contacto_por_nombre(nombre)
@@ -524,7 +548,7 @@ def programa():
                             if opcion == 2:
                                 continue
                             menu_editar_por()
-                            opcion = pedir_opcion([1, 2, 3, 4, 5])
+                            opcion = pedir_opcion([1, 2, 3, 4, 5, 6])
                             match opcion:
                                 case 1:
                                     mi_agenda.modificar_nombre(nombre)
@@ -547,7 +571,7 @@ def programa():
                                             mi_agenda.mostrar_etiquetas_de_un_contacto(
                                                 nombre
                                             )
-                                        ) # type: ignore
+                                        )  # type: ignore
                                         menu_editar_etiquetas()
                                         opcion = pedir_opcion([1, 2])
                                         if opcion == 1:
@@ -587,34 +611,55 @@ def programa():
                                         mi_agenda.mostrar_etiquetas_de_un_contacto(
                                             nombre
                                         )
-
+                                case 6:
+                                    pass
                     elif opcion == 2:
                         telefono = pedir_telefono()
                         print(mi_agenda.buscar_contacto_por_numero(telefono))
-                    else:
+                    elif opcion == 3:
                         etiqueta = pedir_etiqueta()
                         mi_agenda.buscar_contactos_por_etiqueta(etiqueta)
+                    else:
+                        pass
             case 4:
                 if not mi_agenda.lista_de_contactos:
                     print("\nAún no ha guardado ningún contacto")
                 else:
                     menu_eliminar_contacto()
-                    opcion = pedir_opcion([1, 2])
+                    opcion = pedir_opcion([1, 2, 3])
                     if opcion == 1:
                         nombre = pedir_nombre()
                         mi_agenda.eliminar_contacto_por_nombre(nombre)
+                        mi_agenda.guardar_json()
 
-                    else:
+                    elif opcion == 2:
                         numero = pedir_telefono()
                         mi_agenda.eliminar_contacto_por_numero(numero)
-                    mi_agenda.guardar_json()
+                        mi_agenda.guardar_json()
+                    else:
+                        pass
 
             case 5:
                 if not mi_agenda.lista_de_contactos:
                     print("\nAún no ha guardado ningún contacto")
                 else:
-                    mi_agenda.eliminar_todos_los_contactos()
-                    mi_agenda.guardar_json()
+                    while True:
+                        seguro = (
+                            input(
+                                "\n¿Está seguro que desea eliminar todos los contactos (s/n)?: "
+                            )
+                            .strip()
+                            .lower()
+                        )
+                        if seguro in ("s", "si", "sí"):
+                            mi_agenda.eliminar_todos_los_contactos()
+                            mi_agenda.guardar_json()
+                            break
+                        elif seguro in ("n", "no"):
+                            print("\nRegresando al menú principal")
+                            break
+                        else:
+                            print("\nNo válido")
 
             case 6:
                 if not mi_agenda.lista_de_contactos:
