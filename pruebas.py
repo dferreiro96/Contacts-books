@@ -1,5 +1,6 @@
-
-mes = "4"
-dia = "3"
-fecha_a_devolver = f"{dia}/"+ mes
-print(fecha_a_devolver)
+fecha_str = input(
+            "\nIntroduce la fecha de cumpleaños del contacto (DD/MM): "
+        )
+año = "/0001"
+fecha = fecha_str + año
+print(fecha)
