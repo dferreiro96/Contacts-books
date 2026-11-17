@@ -48,7 +48,8 @@ class ContactoLaboral(Contacto):
         self.cargo = cargo
 
     def __str__(self):
-        return f"Nombre: {self.nombre}. Teléfono: {self.telefono}. Dirección de correo electrónica: {self.correo_electronico}. Empresa: {self.empresa}. Cargo: {self.cargo}. Etiquetas: {self.etiquetas}"
+        etiquetas_formateadas = (", ".join(self.etiquetas) if self.etiquetas else "Ninguna")
+        return f"Nombre: {self.nombre}. Teléfono: {self.telefono}. Dirección de correo electrónica: {self.correo_electronico}. Empresa: {self.empresa}. Cargo: {self.cargo}. Etiquetas: {etiquetas_formateadas}"
 
     def devolver_tipo(self):
         tipo = self.__class__.__name__
@@ -234,10 +235,11 @@ class Agenda:
 
     def modificar_fecha_de_cumpleaños(self, nombre):
         for contacto in self.lista_de_contactos:
-            if contacto.nombre == nombre:
-                nuevo_fecha_de_cumpleaños = pedir_fecha_cumple()
-                contacto.cumpleaños = nuevo_fecha_de_cumpleaños
-                print("Ha editado la fecha de cumpleaños correctamente.")
+            if isinstance(contacto, ContactoPersonal) and contacto.nombre == nombre:               
+                    nuevo_fecha_de_cumpleaños = pedir_fecha_cumple()
+                    contacto.cumpleaños = nuevo_fecha_de_cumpleaños
+                    return True
+        return False
 
     def mostrar_agenda(self):
         print("\nLa lista de contactos es la siguiente: \n")
@@ -396,7 +398,7 @@ class Agenda:
         except json.JSONDecodeError:
             print("\nLos datos están corruptos. Se creará una nueva lista de contactos")
             return []
-        except FileNotFoundError:
+        except FileNotFoundError, KeyError, TypeError:
             print("\nNo existen datos previos. Se creará una nueva lista de contactos")
             return []
 
@@ -647,8 +649,11 @@ def programa():
                                         mi_agenda.modificar_correo_electronico(nombre)
                                         mi_agenda.guardar_json()
                                     case 4:
-                                        mi_agenda.modificar_fecha_de_cumpleaños(nombre)
-                                        mi_agenda.guardar_json()
+                                        modificado = mi_agenda.modificar_fecha_de_cumpleaños(nombre)
+                                        if modificado:
+                                            mi_agenda.guardar_json()
+                                            print("\nSe ha editado la fecha de cumpleaños correctamente")
+                                        print("\nSolo a los contactos de tipo familiar se le puede añadir fecha de cumpleaños")
                                     case 5:
                                         tiene_etiquetas = mi_agenda.comprobar_si_un_contacto_tiene_etiquetas(
                                             nombre
