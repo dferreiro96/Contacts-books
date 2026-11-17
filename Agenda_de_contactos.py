@@ -386,7 +386,7 @@ class Agenda:
 
                     else:
                         fecha_del_cumpleaños = datetime.strptime(
-                            cumpleaños + "/0001", "%d/%m/%Y"
+                            cumpleaños + "/2000", "%d/%m/%Y"
                         ).date()
                         nuevo_contacto_personal = ContactoPersonal(
                             nombre, telefono, correo, fecha_del_cumpleaños, parentesco
@@ -456,7 +456,7 @@ def pedir_fecha_cumple():
         fecha_str = input("\nIntroduce la fecha de cumpleaños del contacto (DD/MM): ")
 
         try:
-            fecha_valida = datetime.strptime(fecha_str + "/0001", "%d/%m/%Y").date()
+            fecha_valida = datetime.strptime(fecha_str + "/2000", "%d/%m/%Y").date()
             return fecha_valida
         except ValueError:
             print(
