@@ -60,56 +60,46 @@ class Agenda:
     def __init__(self):
         self.lista_de_contactos = self.descargar_datos()
 
+    def comprobar_si_un_contacto_existe(self, nombre):
+        for c in self.lista_de_contactos:
+            if c.nombre == nombre:
+                return c
+            
+        
+
     def comprobar_nombre(self, nombre):
-        if any(nombre == contacto.nombre for contacto in self.lista_de_contactos):
-            print("\nEse contacto ya está en la Agenda.")
-            return True
-        return False
+        return bool(any(nombre == contacto.nombre for contacto in self.lista_de_contactos))
 
     def comprobar_telefono(self, telefono):
-
-        if any(telefono == contacto.telefono for contacto in self.lista_de_contactos):
-            print("\nNúmero de teléfono repetido.")
-            return True
-        return False
-
-    def agregar_contacto(self, nuevo_contacto):
+        return bool(any(telefono == contacto.telefono for contacto in self.lista_de_contactos))
+    
+    def comprobar_correo(self, correo):
+        return bool(any(correo == contacto.correo_electronico for contacto in self.lista_de_contactos))
+    
+    def agregar_contacto(self, nuevo_contacto: Contacto):
         self.lista_de_contactos.append(nuevo_contacto)
         nuevo_contacto.añadir_etiqueta()
         print(f"\nNuevo contacto añadido: {nuevo_contacto}\n")
         return True
 
     def añadir_etiqueta(self, nombre, etiqueta):
-        retorno = self.comprobar_si_un_contacto_tiene_etiqueta_en_especifico(
-            nombre, etiqueta
-        )
-        if retorno:
-            print("\nEsa etiqueta ya existe para este contacto")
-        else:
-            for c in self.lista_de_contactos:
-                if c.nombre == nombre:
-                    c.etiquetas.append(etiqueta)
-                    self.guardar_json()
-                    print(f"\nSe ha añadido la etiqueta al contacto {nombre}")
-                    break
+        for c in self.lista_de_contactos:
+            if c.nombre == nombre:
+                c.etiquetas.append(etiqueta)
+                self.guardar_json()
+
 
     def comprobar_si_un_contacto_tiene_etiqueta_en_especifico(self, nombre, etiqueta):
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre and etiqueta in contacto.etiquetas:
-                return True
-        return False
+                return bool
 
     def buscar_contacto_por_nombre(self, nombre):
-        encontrado = False
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre:
-                return f"\n{contacto}"
-        if not encontrado:
-            print("\nContacto no existe")
-            return
+                return contacto
 
     def buscar_contacto_por_numero(self, telefono):
-        encontrado = False
         str_telefono = str(telefono)
         if len(str_telefono) == 8:
             telefono_formateado = (
@@ -117,11 +107,11 @@ class Agenda:
             )
         else:
             telefono_formateado = telefono
+            
         for contacto in self.lista_de_contactos:
             if contacto.telefono == telefono_formateado:
                 return f"\n{contacto}"
-        if not encontrado:
-            return "\nContacto no existe"
+        return False
 
     def buscar_contactos_por_etiqueta(self, etiqueta):
         lista_con_etiquetas = []
@@ -137,109 +127,60 @@ class Agenda:
             print("\nNo se encuentran contactos con esa etiqueta")
 
     def eliminar_contactos(self):
-        while True:
-            seguro = (
-                input("\n¿Está seguro que desea eliminar todos los contactos (s/n)?: ")
-                .strip()
-                .lower()
-            )
-            if seguro in ("s", "si", "sí"):
-                self.eliminar_todos_los_contactos()
-                self.guardar_json()
-                break
-            elif seguro in ("n", "no"):
-                print("\nRegresando al menú principal")
-                break
-            else:
-                print("\nNo válido")
+        retorno = confirmacion_borrar_contactos("\n¿Está seguro que desea eliminar TODOS los contactos (s/n)?: ")
+        if retorno:
+            self.eliminar_todos_los_contactos()
+            self.guardar_json()
+            return bool
 
-    def eliminar_contactos_por_nombre(self, nombre):
-        while True:
-            seguro = (
-                input("\n¿Está seguro que desea eliminar el contacto (s/n)?: ")
-                .strip()
-                .lower()
-            )
-            if seguro in ("s", "si", "sí"):
-                self.eliminar_contacto_por_nombre(nombre)
-                self.guardar_json()
-                break
-            elif seguro in ("n", "no"):
-                print("\nRegresando al menú principal")
-                break
-            else:
-                print("\nNo válido")
 
-    def eliminar_contactos_por_numero(self, numero):
-        while True:
-            seguro = (
-                input("\n¿Está seguro que desea eliminar el contacto (s/n)?: ")
-                .strip()
-                .lower()
-            )
-            if seguro in ("s", "si", "sí"):
-                self.eliminar_contacto_por_numero(numero)
-                self.guardar_json()
-                break
-            elif seguro in ("n", "no"):
-                print("\nRegresando al menú principal")
-                break
-            else:
-                print("\nNo válido")
-
-    def eliminar_contacto_por_nombre(self, nombre):
-        encontrado = False
-        for contacto in self.lista_de_contactos:
-            if contacto.nombre == nombre:
-                print(f"\nSe ha eliminado el contacto {contacto.nombre}.")
-                self.lista_de_contactos.remove(contacto)
-                encontrado = True
-                return
-        if not encontrado:
-            print("\nContacto no existe")
-
-    def eliminar_contacto_por_numero(self, numero):
-        encontrado = False
-        for contacto in self.lista_de_contactos:
-            if contacto.telefono == numero:
-                encontrado = True
-                self.lista_de_contactos.remove(contacto)
-                print(f"\nSe ha eliminado el contacto {contacto.nombre}.")
-        if not encontrado:
-            return (
-                f"\nNo se encontró ningún contacto con el número de teléfono {numero}."
-            )
-
+    def eliminar_contactos_por_nombre(self, contacto):
+        retorno = confirmacion_borrar_contactos("\n¿Está seguro que desea eliminar el contacto (s/n)?: ")
+        if retorno:
+            self.lista_de_contactos.remove(contacto)
+            self.guardar_json()
+            return bool
+                
+    
     def modificar_nombre(self, nombre):
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre:
                 nuevo_nombre = pedir_nombre()
-                print(
-                    f"\nHa editado el nombre correctamente. Antes se llamaba {contacto.nombre}, ahora se llama {nuevo_nombre}"
-                )
-                contacto.nombre = nuevo_nombre
+                repetido = self.comprobar_nombre(nuevo_nombre)
+                if not repetido:
+                    contacto.nombre = nuevo_nombre
+                    self.guardar_json()
+                    return nuevo_nombre
 
     def modificar_telefono(self, nombre):
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre:
                 nuevo_numero = pedir_telefono()
-                contacto.telefono = nuevo_numero
-                print("Ha editado el número correctamente.")
+                nuevo_numero_formateado = formatear_numero_de_telefono(nuevo_numero)
+                repetido = self.comprobar_telefono(nuevo_numero_formateado)
+                if not repetido:
+                    contacto.telefono = nuevo_numero_formateado
+                    self.guardar_json()
+                    return bool
 
     def modificar_correo_electronico(self, nombre):
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre:
                 nuevo_email = pedir_correo_electronico()
-                contacto.correo_electronico = nuevo_email
-                print("Ha cambiado el correo electrónico correctamente.")
+                repetido = self.comprobar_correo(nuevo_email)
+                if not repetido:
+                    contacto.correo_electronico = nuevo_email
+                    self.guardar_json()
+                    return bool
 
     def modificar_fecha_de_cumpleaños(self, nombre):
         for contacto in self.lista_de_contactos:
             if isinstance(contacto, ContactoPersonal) and contacto.nombre == nombre:               
                     nuevo_fecha_de_cumpleaños = pedir_fecha_cumple()
                     contacto.cumpleaños = nuevo_fecha_de_cumpleaños
-                    return True
-        return False
+                    self.guardar_json()
+                    return bool
+
 
     def mostrar_agenda(self):
         print("\nLa lista de contactos es la siguiente: \n")
@@ -249,7 +190,7 @@ class Agenda:
 
     def eliminar_todos_los_contactos(self):
         self.lista_de_contactos.clear()
-        print("\nSe han eliminado todos los contactos de la agenda\n")
+
 
     def mostrar_contactos_laborales(self):
         contactos_laborales = []
@@ -285,18 +226,17 @@ class Agenda:
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre:
                 etiquetas = contacto.etiquetas
-                if etiquetas:
-                    print(f"\nEtiquetas actuales de {contacto.nombre}\n")
-                    for i, est in enumerate(etiquetas, start=1):
-                        print(f"{i}. {est}")
-                    return etiquetas, len(etiquetas)
+                for i, est in enumerate(etiquetas, start=1):
+                    print(f"{i}. {est}")
+                return etiquetas, len(etiquetas)
 
     def comprobar_si_un_contacto_tiene_etiquetas(self, nombre):
         for contacto in self.lista_de_contactos:
-            if contacto.nombre == nombre:
+            if contacto.nombre == nombre and contacto.etiquetas:
                 etiquetas = contacto.etiquetas
                 return bool(etiquetas)
-
+            
+   
     def convertir_a_diccionario(self):
         lista_de_diccionarios = []
         for contacto in self.lista_de_contactos:
@@ -356,11 +296,10 @@ class Agenda:
                             "Etiquetas": etiquetas_texto,
                         }
                     )
-                print(
-                    "\nSe han exportado los datos correctamente al archivo llamado 'Agenda de contactos.csv'"
-                )
+                return True
         except PermissionError:
-            print("\nOtro programa tiene abierto el archivo .csv, ciérrelo primero.")
+            return False
+
 
     def descargar_datos(self):
         lista_reconstituida = []
@@ -409,6 +348,67 @@ class Agenda:
                     f"\nHoy es el cumpleaños de {contacto.nombre}. Envíale felicidades !!"
                 )
 
+def confirmacion_borrar_contactos(mensaje):
+            while True:
+                seguro = (
+                    input(mensaje)
+                    .strip()
+                    .lower()
+                )
+                if seguro in ("s", "si", "sí"):
+                    return True
+                elif seguro in ("n", "no"):
+                    return False
+                else:
+                    print("\nNo válido")
+
+
+def editar_etiquetas(mi_agenda: Agenda, nombre):
+    etiqueta = pedir_etiqueta()
+    resultado = mi_agenda.comprobar_si_un_contacto_tiene_etiqueta_en_especifico(nombre, etiqueta)
+    if resultado:
+        print("\nEl contacto ya tiene esa etiqueta")
+        return
+    mi_agenda.añadir_etiqueta(nombre, etiqueta)
+    print(f"\nSe ha añadido la etiqueta al contacto {nombre}")
+    print("\nEtiquetas del contacto\n")
+    mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+
+def tiene_etiquetas(mi_agenda: Agenda, nombre):
+    print(f"\nEtiquetas actuales de {nombre}\n")
+    mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+    if mi_agenda.mostrar_etiquetas_de_un_contacto(nombre) is not None:
+        menu_editar_etiquetas()
+        opcion = pedir_opcion([1, 2])
+        if opcion == 1:
+            editar_etiquetas(mi_agenda, nombre)               
+        else:
+            eliminar_etiquetas(mi_agenda, nombre)
+            
+def no_tiene_etiquetas(mi_agenda: Agenda, nombre):
+    print(f"\n{nombre} no tiene etiquetas actualmente." )
+    menu_añadir_etiquetas()
+    opcion = pedir_opcion([1])
+    if opcion == 1:
+        etiqueta = pedir_etiqueta()
+        mi_agenda.añadir_etiqueta(nombre, etiqueta)
+        print(f"\nSe ha añadido la etiqueta al contacto {nombre}")
+        print("\nEtiquetas del contacto\n")
+        mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+
+def eliminar_etiquetas(mi_agenda: Agenda, nombre):
+    print("\nSeleccione la etiqueta a eliminar\n")
+    lista, cantidad_de_etiquetas = mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+    opcion = pedir_opcion(range(1, cantidad_de_etiquetas + 1))
+    eliminado = lista.pop(opcion - 1)
+    mi_agenda.guardar_json()
+    print(
+        f"\nHa eliminado la etiqueta '{eliminado}' del contacto {nombre}"
+    )
+    print(f"\nEtiquetas actuales de {nombre}\n")
+    mi_agenda.mostrar_etiquetas_de_un_contacto(
+        nombre
+    )
 
 def pedir_nombre():
     return input("\nNombre del contacto: ").title().strip()
@@ -479,10 +479,11 @@ def menu():
     print("1. Agregar contacto")
     print("2. Mostrar contactos")
     print("3. Buscar contacto")
-    print("4. Eliminar contacto")
-    print("5. Eliminar todos los contactos")
-    print("6. Exportar datos a Excel")
-    print("7. Salir")
+    print("4. Editar contacto")    
+    print("5. Eliminar contacto")
+    print("6. Eliminar todos los contactos")
+    print("7. Exportar datos a Excel")
+    print("8. Salir")
 
 
 def menu_tipo_de_contacto():
@@ -506,13 +507,6 @@ def menu_filtar_contactos():
     print("2. Buscar por número de teléfono")
     print("3. Buscar por etiqueta")
     print("4. Salir")
-
-
-def menu_eliminar_contacto():
-    print("\n____Eliminar contacto_____\n")
-    print("1. Eliminar por nombre")
-    print("2. Eliminar por número de teléfono")
-    print("3. Salir")
 
 
 def menu_editar():
@@ -559,8 +553,196 @@ def formatear_numero_de_telefono(telefono):
         return f"+53 {telefono[:1]}-{telefono[1:4]}-{telefono[4:]}"
     else:
         return telefono
+    
+def modificar_fecha_de_cumpleaños(mi_agenda: Agenda, nombre):
+    nueva_fecha_de_cumpleaños = mi_agenda.modificar_fecha_de_cumpleaños(nombre)
+    if nueva_fecha_de_cumpleaños:
+        print("\nHa cambiado la fecha de cumpleaños correctamente.")
+    else:
+        print("\nNo se le puede añadir fecha de cumpleaños a ese tipo de contacto")
 
+def modificar_correo(mi_agenda: Agenda, nombre):
+    nuevo_correo = mi_agenda.modificar_correo_electronico(nombre)
+    if nuevo_correo:
+        print("\nHa editado la dirección de correo electrónico correctamente.")
+    else:
+        print("\nYa existe un contacto con esa dirección de correo electrónico")
+    
+def modificar_nombre(mi_agenda: Agenda, nombre):
+    nuevo_nombre = mi_agenda.modificar_nombre(nombre)
+    if nuevo_nombre is not None:
+        print(f"\nHa editado el nombre correctamente, ahora se llama {nuevo_nombre}")
+    else:
+        print("\nYa existe un contacto con ese nombre")
+        
+def modificar_telefono(mi_agenda: Agenda, nombre):
+    nuevo_telefono = mi_agenda.modificar_telefono(nombre)
+    if nuevo_telefono:
+        print("\nHa editado el número de teléfono correctamente.")
+    else:
+        print("\nYa existe un contacto con ese número de teléfono")
 
+def modificar_etiquetas(mi_agenda: Agenda, nombre):
+    tiene_etiqueta = mi_agenda.comprobar_si_un_contacto_tiene_etiquetas(nombre )
+    if tiene_etiqueta:
+        tiene_etiquetas(mi_agenda, nombre)
+    no_tiene_etiquetas(mi_agenda, nombre)
+        
+        
+def gestionar_edicion_de_contactos(mi_agenda: Agenda):  
+    nombre = buscar_contacto_por_nombre(mi_agenda)
+    if nombre is not None:
+        menu_editar_por()
+        opcion = pedir_opcion([1, 2, 3, 4, 5, 6])
+        match opcion:
+            case 1:
+                modificar_nombre(mi_agenda, nombre)
+            case 2:
+                modificar_telefono(mi_agenda, nombre)
+            case 3:
+                modificar_correo(mi_agenda, nombre)
+            case 4:
+               modificar_fecha_de_cumpleaños(mi_agenda, nombre)
+            case 5:
+               modificar_etiquetas(mi_agenda, nombre)
+            case 6:
+                return
+    else:
+        print("\nContacto no existe")    
+    
+    
+def gestionar_busqueda_de_contactos(mi_agenda: Agenda):
+    if not mi_agenda.lista_de_contactos:
+        print("\nAún no ha guardado ningún contacto")
+    else:
+        menu_filtar_contactos()
+        opcion = pedir_opcion([1, 2, 3, 4])
+        if opcion == 1:
+           contacto = buscar_contacto_por_nombre(mi_agenda) 
+           if contacto:
+               print(contacto)
+           else:
+               print("\nEl contacto no existe")             
+        elif opcion == 2:
+            buscar_contacto_por_numero(mi_agenda)
+        elif opcion == 3:
+            etiqueta = pedir_etiqueta()
+            mi_agenda.buscar_contactos_por_etiqueta(etiqueta)
+        else:
+            return
+        
+def buscar_contacto_por_numero(mi_agenda: Agenda):
+    numero = pedir_telefono()
+    contacto_buscado = mi_agenda.buscar_contacto_por_numero(
+        numero
+    )
+    if contacto_buscado:
+        print(contacto_buscado)
+    else:
+        print("\nContacto no existe")
+                    
+def buscar_contacto_por_nombre(mi_agenda: Agenda):
+    nombre = pedir_nombre()
+    contacto_buscado = mi_agenda.buscar_contacto_por_nombre(
+        nombre
+    )
+    if contacto_buscado is not None:
+        return contacto_buscado.nombre
+
+def gestionar_mostrar_contactos(mi_agenda: Agenda):
+    if not mi_agenda.lista_de_contactos:
+        print("\nAún no ha guardado ningún contacto")
+    else:
+        menu_mostrar_tipo_de_contacto()
+        opcion = pedir_opcion([1, 2, 3, 4])
+        if opcion == 1:
+            mi_agenda.mostrar_agenda()
+        elif opcion == 2:
+            mi_agenda.mostrar_contactos_personales()
+        elif opcion == 3:
+            mi_agenda.mostrar_contactos_laborales()
+        else:
+            return
+
+def gestionar_agregar_contactos(mi_agenda: Agenda):
+    menu_tipo_de_contacto()
+    opcion = pedir_opcion([1, 2, 3])
+    nombre = pedir_nombre()
+    comprobar_nombre_repetido = mi_agenda.comprobar_nombre(nombre)
+    if comprobar_nombre_repetido:
+        print("\nYa existe un contacto con ese nombre")
+        return
+    telefono = pedir_telefono()
+    if opcion == 1:
+        contacto = pedir_datos_del_contacto_familiar(nombre, telefono)
+        mi_agenda.agregar_contacto(contacto)
+        mi_agenda.guardar_json()
+        print(f"\nContacto {contacto.nombre} agregado correctamente")
+    elif opcion == 2:
+        contacto = pedir_datos_del_contacto_laboral(nombre, telefono)
+        mi_agenda.agregar_contacto(contacto)
+        mi_agenda.guardar_json()
+        print(f"\nContacto {contacto.nombre} agregado correctamente")
+    else:
+        return       
+
+def gestionar_eliminar_contacto(mi_agenda: Agenda):
+    if not mi_agenda.lista_de_contactos:
+        print("\nAún no ha guardado ningún contacto")
+    else:
+        nombre = pedir_nombre()
+        contacto = mi_agenda.comprobar_si_un_contacto_existe(nombre)
+        if contacto is not None:
+                eliminado = mi_agenda.eliminar_contactos_por_nombre(contacto)
+                if eliminado:
+                    print(f"\nSe ha eliminado el contacto {contacto.nombre}")
+                    return
+                else:
+                    print("\nRegresando al menú principal")
+                    return
+        print("\nContacto no existe")
+
+def gestionar_eliminar_todos_los_contactos(mi_agenda: Agenda):
+    if not mi_agenda.lista_de_contactos:
+        print("\nAún no ha guardado ningún contacto")
+    else:
+        eliminado = mi_agenda.eliminar_contactos()
+        if eliminado:
+            print("\nSe han eliminado todos los contactos")
+        else:
+            print("\nRegresando al menú principal")
+
+def gestionar_exportacion_a_csv(mi_agenda: Agenda):
+    if not mi_agenda.lista_de_contactos:
+        print("\nAún no ha guardado ningún contacto")
+    else:
+        exportado = mi_agenda.exportar_csv()
+        if exportado:
+            print( "\nSe han exportado los datos correctamente al archivo llamado 'Agenda de contactos.csv'" )
+        else:
+            print("\nOtro programa tiene abierto el archivo .csv, ciérrelo primero.")
+
+def pedir_datos_del_contacto_familiar(nombre, telefono): 
+    telefono_formateado = formatear_numero_de_telefono(telefono)
+    parentesco = pedir_parentesco()
+    cumpleaños = pedir_fecha_cumple()
+    correo = pedir_correo_electronico()
+    mi_contacto_familiar = ContactoPersonal(
+        nombre, telefono_formateado, correo, cumpleaños, parentesco
+    )
+    return mi_contacto_familiar
+
+def pedir_datos_del_contacto_laboral(nombre, telefono): 
+    telefono_formateado = formatear_numero_de_telefono(telefono)
+    empresa = pedir_empresa()
+    cargo = pedir_cargo()   
+    correo = pedir_correo_electronico()
+    mi_contacto_laboral = ContactoLaboral(
+        nombre, telefono_formateado, correo, empresa, cargo
+    ) 
+    return mi_contacto_laboral
+
+    
 def programa():
     mi_agenda = None
     try:
@@ -571,177 +753,23 @@ def programa():
             mi_agenda.revisar_cumpleaños()
         while True:
             menu()
-            opcion = pedir_opcion([1, 2, 3, 4, 5, 6, 7])
+            opcion = pedir_opcion([1, 2, 3, 4, 5, 6, 7, 8])
             match opcion:
                 case 1:
-                    menu_tipo_de_contacto()
-                    seleccion = pedir_opcion([1, 2, 3])
-                    if seleccion == 3:
-                        continue
-                    nombre = pedir_nombre()
-                    resultado = mi_agenda.comprobar_nombre(nombre)
-                    if resultado:
-                        continue
-                    telefono = pedir_telefono()
-                    telefono_formateado = formatear_numero_de_telefono(telefono)
-                    resultado = mi_agenda.comprobar_telefono(telefono_formateado)
-                    if resultado:
-                        continue
-                    correo = pedir_correo_electronico()
-                    if seleccion == 1:
-                        parentesco = pedir_parentesco()
-                        cumpleaños = pedir_fecha_cumple()
-                        mi_contacto = ContactoPersonal(
-                            nombre, telefono_formateado, correo, cumpleaños, parentesco
-                        )
-
-                    else:
-                        empresa = pedir_empresa()
-                        cargo = pedir_cargo()
-                        mi_contacto = ContactoLaboral(
-                            nombre, telefono_formateado, correo, empresa, cargo
-                        )
-                    mi_agenda.agregar_contacto(mi_contacto)
-                    mi_agenda.guardar_json()
-                    print(f"\nContacto {mi_contacto.nombre} agregado correctamente")
-
+                    gestionar_agregar_contactos(mi_agenda)
                 case 2:
-                    if not mi_agenda.lista_de_contactos:
-                        print("\nAún no ha guardado ningún contacto")
-                    else:
-                        menu_mostrar_tipo_de_contacto()
-                        opcion = pedir_opcion([1, 2, 3, 4])
-                        if opcion == 1:
-                            mi_agenda.mostrar_agenda()
-                        elif opcion == 2:
-                            mi_agenda.mostrar_contactos_personales()
-                        elif opcion == 3:
-                            mi_agenda.mostrar_contactos_laborales()
-                        else:
-                            pass
+                    gestionar_mostrar_contactos(mi_agenda)
                 case 3:
-                    if not mi_agenda.lista_de_contactos:
-                        print("\nAún no ha guardado ningún contacto")
-                    else:
-                        menu_filtar_contactos()
-                        opcion = pedir_opcion([1, 2, 3, 4])
-                        if opcion == 1:
-                            nombre = pedir_nombre()
-                            contacto_buscado = mi_agenda.buscar_contacto_por_nombre(
-                                nombre
-                            )
-                            if contacto_buscado:
-                                print(contacto_buscado)
-                                menu_editar()
-                                opcion = pedir_opcion([1, 2])
-                                if opcion == 2:
-                                    continue
-                                menu_editar_por()
-                                opcion = pedir_opcion([1, 2, 3, 4, 5, 6])
-                                match opcion:
-                                    case 1:
-                                        mi_agenda.modificar_nombre(nombre)
-                                        mi_agenda.guardar_json()
-                                    case 2:
-                                        mi_agenda.modificar_telefono(nombre)
-                                        mi_agenda.guardar_json()
-                                    case 3:
-                                        mi_agenda.modificar_correo_electronico(nombre)
-                                        mi_agenda.guardar_json()
-                                    case 4:
-                                        modificado = mi_agenda.modificar_fecha_de_cumpleaños(nombre)
-                                        if modificado:
-                                            mi_agenda.guardar_json()
-                                            print("\nSe ha editado la fecha de cumpleaños correctamente")
-                                        print("\nSolo a los contactos de tipo familiar se le puede añadir fecha de cumpleaños")
-                                    case 5:
-                                        tiene_etiquetas = mi_agenda.comprobar_si_un_contacto_tiene_etiquetas(
-                                            nombre
-                                        )
-                                        if tiene_etiquetas:
-                                            lista, cantidad_de_etiquetas = (
-                                                mi_agenda.mostrar_etiquetas_de_un_contacto(
-                                                    nombre
-                                                )
-                                            )  # type: ignore
-                                            menu_editar_etiquetas()
-                                            opcion = pedir_opcion([1, 2])
-                                            if opcion == 1:
-                                                etiqueta = pedir_etiqueta()
-                                                mi_agenda.añadir_etiqueta(nombre, etiqueta )
-                                                mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
-                                                continue
-
-                                            else:
-                                                print(
-                                                    "\nSeleccione la etiqueta a eliminar"
-                                                )
-                                                mi_agenda.mostrar_etiquetas_de_un_contacto(
-                                                    nombre
-                                                )
-                                                opcion = pedir_opcion(
-                                                    range(1, cantidad_de_etiquetas + 1)
-                                                )
-                                                eliminado = lista.pop(opcion - 1)
-                                                mi_agenda.guardar_json()
-                                                print(
-                                                    f"\nHa eliminado la etiqueta '{eliminado}' del contacto {nombre}"
-                                                )
-                                                mi_agenda.mostrar_etiquetas_de_un_contacto(
-                                                    nombre
-                                                )
-                                                continue
-                                        print(
-                                            f"\n{nombre} no tiene etiquetas actualmente."
-                                        )
-                                        menu_añadir_etiquetas()
-                                        opcion = pedir_opcion([1])
-                                        if opcion == 1:
-                                            etiqueta = pedir_etiqueta()
-                                            mi_agenda.añadir_etiqueta(nombre, etiqueta)
-                                            mi_agenda.mostrar_etiquetas_de_un_contacto(
-                                                nombre
-                                            )
-                                    case 6:
-                                        pass
-                        elif opcion == 2:
-                            telefono = pedir_telefono()
-                            print(mi_agenda.buscar_contacto_por_numero(telefono))
-                        elif opcion == 3:
-                            etiqueta = pedir_etiqueta()
-                            mi_agenda.buscar_contactos_por_etiqueta(etiqueta)
-                        else:
-                            pass
+                    gestionar_busqueda_de_contactos(mi_agenda)
                 case 4:
-                    if not mi_agenda.lista_de_contactos:
-                        print("\nAún no ha guardado ningún contacto")
-                    else:
-                        menu_eliminar_contacto()
-                        opcion = pedir_opcion([1, 2, 3])
-                        if opcion == 1:
-                            nombre = pedir_nombre()
-                            mi_agenda.eliminar_contactos_por_nombre(nombre)
-
-                        elif opcion == 2:
-                            numero = pedir_telefono()
-                            formateado = formatear_numero_de_telefono(numero)
-                            mi_agenda.eliminar_contactos_por_numero(formateado)
-                        else:
-                            pass
-
+                    gestionar_edicion_de_contactos(mi_agenda)
                 case 5:
-                    if not mi_agenda.lista_de_contactos:
-                        print("\nAún no ha guardado ningún contacto")
-                    else:
-                        mi_agenda.eliminar_contactos()
-
+                   gestionar_eliminar_contacto(mi_agenda)
                 case 6:
-                    if not mi_agenda.lista_de_contactos:
-                        print("\nAún no ha guardado ningún contacto")
-                    else:
-                        mi_agenda.exportar_csv()
-
+                    gestionar_eliminar_todos_los_contactos(mi_agenda)   
                 case 7:
+                    gestionar_exportacion_a_csv(mi_agenda)
+                case 8:
                     return
     except KeyboardInterrupt:
         print("\nSaliendo de emergencia por orden del usuario. \nGuardando datos")
@@ -750,8 +778,15 @@ def programa():
             print("\nDatos guardados")
         else:
             print("No se pudo guardar porque la agenda no llegó a iniciarse.")
-
-
+            
+    except Exception as e:
+        print(f"\n[!] Ocurrió un error inesperado: {e}")
+        if mi_agenda is not None:
+            print("Guardando datos...")
+            mi_agenda.guardar_json()
+            print("Datos guardados")
+        else:
+            print("No se pudo guardar porque la agenda no llegó a iniciarse.")
 def main():
     programa()
     print("\nHa salido satisfactoriamente del programa.\n")
