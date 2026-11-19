@@ -1,7 +1,7 @@
 import csv
 import json
-from datetime import date, datetime
 import shutil
+from datetime import date, datetime
 
 
 class Contacto:
@@ -247,7 +247,6 @@ class Agenda:
             if contacto.nombre == nombre and contacto.etiquetas:
                 etiquetas = contacto.etiquetas
                 return etiquetas
-            
 
     def convertir_a_diccionario(self):
         lista_de_diccionarios = []
@@ -347,7 +346,9 @@ class Agenda:
 
         except KeyError, TypeError, ValueError:
             shutil.copy("Datos.json", "Datos.back")
-            print("\nLos datos están corruptos. Se guardó una copia de seguridad en Datos.back")
+            print(
+                "\nLos datos están corruptos. Se guardó una copia de seguridad en Datos.back"
+            )
             return []
         except FileNotFoundError:
             print("\nNo existen datos previos. Se creará una nueva lista de contactos")
