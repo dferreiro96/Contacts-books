@@ -658,6 +658,8 @@ def gestionar_mostrar_contactos(mi_agenda: Agenda):
 def gestionar_agregar_contactos(mi_agenda: Agenda):
     menu_tipo_de_contacto()
     opcion = pedir_opcion([1, 2, 3])
+    if opcion == 3:
+        return
     nombre = pedir_nombre()
     comprobar_nombre_repetido = mi_agenda.comprobar_nombre(nombre)
     if comprobar_nombre_repetido:
@@ -678,9 +680,7 @@ def gestionar_agregar_contactos(mi_agenda: Agenda):
         contacto = pedir_datos_del_contacto_laboral(nombre, telefono)
         mi_agenda.agregar_contacto(contacto)
         mi_agenda.guardar_json()
-        print(f"\nContacto {contacto.nombre} agregado correctamente")
-    else:
-        return       
+        print(f"\nContacto {contacto.nombre} agregado correctamente")     
 
 def gestionar_eliminar_contacto(mi_agenda: Agenda):
     if not mi_agenda.lista_de_contactos:
