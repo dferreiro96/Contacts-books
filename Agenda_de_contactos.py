@@ -372,8 +372,8 @@ def editar_etiquetas(mi_agenda: Agenda, nombre):
 
 def tiene_etiquetas(mi_agenda: Agenda, nombre):
     print(f"\nEtiquetas actuales de {nombre}\n")
-    mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
-    if mi_agenda.mostrar_etiquetas_de_un_contacto(nombre) is not None:
+    etiquetas = mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+    if etiquetas is not None:
         menu_editar_etiquetas()
         opcion = pedir_opcion([1, 2])
         if opcion == 1:
