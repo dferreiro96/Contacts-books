@@ -631,7 +631,7 @@ def buscar_contacto_por_numero(mi_agenda: Agenda):
 def opcion_3_busqueda_de_contactos_por_etiquetas(mi_agenda:Agenda):
     etiqueta = pedir_etiqueta()
     lista_de_contactos_con_la_etiqueta = mi_agenda.buscar_contactos_por_etiqueta(etiqueta)
-    if lista_de_contactos_con_la_etiqueta is not None:
+    if lista_de_contactos_con_la_etiqueta:
         for i, contacto in enumerate(lista_de_contactos_con_la_etiqueta, start=1):
             print(f"\n{i}. {contacto}")
     else:
