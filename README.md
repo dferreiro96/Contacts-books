@@ -1,78 +1,83 @@
-# Contact Book / Agenda de Contactos v.2
+# Contact Book / Agenda de Contactos v.3
 
-A Python CLI program to manage a contact book: add, search, delete, and list contacts.
+A Python CLI program to manage a contact book using Object-Oriented Programming: add, search, delete, and edit contacts, with JSON persistence and CSV export.
 
-Un programa de línea de comandos en Python para gestionar una agenda de contactos: añadir, buscar, eliminar y listar contactos.
+Un programa de línea de comandos en Python para gestionar una agenda de contactos usando Programación Orientada a Objetos: añadir, buscar, eliminar y editar contactos, con persistencia en JSON y exportación a CSV.
 
 ## Features / Funcionalidades
 
-- Add contacts with name and phone number / Añadir contactos con nombre y número de teléfono
-- Store contacts in a list of dictionaries / Guardar contactos en una lista de diccionarios
-- Prevent duplicate contacts / Evitar contactos duplicados
-- Search for a contact by name / Buscar un contacto por nombre
-- Delete a contact by name / Eliminar un contacto por nombre
-- Delete all contacts at once / Eliminar todos los contactos de una vez
-- List all contacts sorted alphabetically / Listar todos los contactos ordenados alfabéticamente
-- Menu-driven interface / Interfaz con menú
-- Input validation for phone numbers / Validación de entrada para números de teléfono
+- Object-Oriented Design: Uses inheritance (Contacto, ContactoPersonal, ContactoLaboral) and an Agenda class to manage logic. / Diseño Orientado a Objetos: Usa herencia (Contacto, ContactoPersonal, ContactoLaboral) y una clase Agenda para gestionar la lógica.
+
+- Add contacts with name, phone number, email, and custom tags / Añadir contactos con nombre, teléfono, correo y etiquetas personalizadas.
+
+- Prevent duplicate names, phone numbers, and emails / Evitar nombres, teléfonos y correos duplicados.
+
+- Automatic JSON Persistence: Automatically saves changes to Datos.json. / Persistencia Automática en JSON: Guarda los cambios automáticamente en Datos.json.
+
+- Crash Protection & Backups: Creates a backup (Datos.back) if the JSON is corrupted, and saves data if the user presses Ctrl+C. / Protección contra Cierres y Copias: Crea un respaldo (Datos.back) si el JSON está corrupto, y guarda los datos si el usuario presiona Ctrl+C.
+
+- Birthday Reminder: Checks and displays a reminder at startup if any personal contact has a birthday today. / Recordatorio de Cumpleaños: Verifica y muestra un aviso al iniciar si algún contacto personal está de cumpleaños hoy.
+
+- CSV Export: Export the contact list to Excel. / Exportación a CSV: Exporta la lista de contactos a Excel.
+
+- Menu-driven interface with input validation / Interfaz con menú y validación de entradas.
 
 ## What Changed / Qué Cambió
 
-This version was refactored into a  program with functions.
-
-Esta versión fue refactorizada de un script de un solo archivo a un programa con funciones.
+- This version was refactored into an Object-Oriented architecture with data persistence / Esta versión fue refactorizada a una arquitectura Orientada a Objetos con persistencia de datos.
 
 ### Before / Antes
 
-- All logic was written directly in the main loop / Toda la lógica estaba escrita directamente en el bucle principal
-- No functions, just inline code / Sin funciones, solo código en línea
-- Harder to read and maintain / Más difícil de leer y mantener
+- Used a single Contacto list of dictionaries / Usaba una sola lista de diccionarios para los contactos.
+
+- No file persistence (data lost on exit) / Sin persistencia de archivos (se perdían los datos al salir).
+
+- Monolithic menu logic / Lógica del menú monolítica.
 
 ### After / Después
 
-- Code split into reusable functions / Código dividido en funciones reutilizables
-- Each function has a single responsibility / Cada función tiene una sola responsabilidad
-- `main()` function controls the program flow / La función `main()` controla el flujo del programa
-- Uses `match case` for menu options / Usa `match case` para las opciones del menú
-- Easier to read, test, and maintain / Más fácil de leer, probar y mantener
+- Inheritance & super(): ContactoPersonal and ContactoLaboral inherit from Contacto. / Herencia y super(): ContactoPersonal y ContactoLaboral heredan de Contacto.
 
-### Function List / Lista de Funciones
+- File Handling: JSON for reading/writing state, CSV for exporting. / Manejo de Archivos: JSON para leer/escribir el estado, CSV para exportar.
 
-- `pedir_nombre()` — Ask for and validate a contact name / Pedir y validar un nombre de contacto
-- `pedir_telefono()` — Ask for and validate a phone number / Pedir y validar un número de teléfono
-- `agregar_contacto(agenda)` — Add a new contact / Añadir un nuevo contacto
-- `buscar_contacto(agenda)` — Search for a contact by name / Buscar un contacto por nombre
-- `eliminar_contacto(agenda)` — Delete a contact by name / Eliminar un contacto por nombre
-- `mostrar_agenda(agenda)` — Display all contacts sorted / Mostrar todos los contactos ordenados
-- `eliminar_todos_los_contactos(agenda)` — Delete all contacts / Eliminar todos los contactos
-- `menu()` — Display the menu / Mostrar el menú
-- `pedir_opcion(opciones)` — Ask for and validate a menu option / Pedir y validar una opción del menú
-- `jugar()` — Main loop of the program / Bucle principal del programa
-- `main()` — Entry point / Punto de entrada
+- Modular UI: The programa() function acts as a router, calling smaller action functions (gestionar_agregar_contactos, gestionar_edicion_de_contactos, etc.). / UI Modular: La función programa() actúa como enrutador, llamando a funciones de acción más pequeñas.
 
+## Function List / Lista de Funciones principales
+
+- class Contacto (Base class: name, phone, email, tags) / (Clase base: nombre, teléfono, correo, etiquetas)
+
+- class ContactoPersonal(Contacto) (Adds birthday and relationship) / (Añade cumpleaños y parentesco)
+
+- class ContactoLaboral(Contacto) (Adds company and position) / (Añade empresa y cargo)
+
+- class Agenda (Manages the contact list, persistence, and searches) / (Gestiona la lista de contactos, persistencia y búsquedas)
+
+- programa() — Main loop and exception handling / Bucle principal y manejo de excepciones
+
+- gestionar_agregar_contactos(), gestionar_busqueda_de_contactos(), gestionar_edicion_de_contactos() — UI routers / Enrutadores de la interfaz
 
 ## Requirements / Requisitos
 
-Python 3
+- Python 3.10 or higher (uses match statements) / Python 3.10 o superior (usa match).
+
+- Standard library only (json, csv, datetime, shutil) / Solo librería estándar.
 
 ## What I Learned / Lo que Aprendí
 
-- Using dictionaries to store key-value data / Usar diccionarios para guardar datos clave-valor
+- Object-Oriented Programming: Classes, Inheritance (super()), and Polymorphism (isinstance). / Programación Orientada a Objetos: Clases, Herencia (super()) y Polimorfismo (isinstance).
 
-- Asking the user for a specific number of items / Preguntar al usuario por un número específico de elementos
+- Data Persistence: Using __dict__ to serialize objects to JSON and reconstructing them. / Persistencia de Datos: Usar __dict__ para serializar objetos a JSON y reconstruirlos.
 
-- Using enumerate() with dicc.items() to number the output / Usar enumerate() con dicc.items() para numerar la salida
+- File Export: Using csv.DictWriter for Excel reports and string formatting (.strftime). / Exportación de Archivos: Usar csv.DictWriter para reportes en Excel y formateo de strings.
 
-- Validating input with try/except / Validar entradas con try/except
+- Exception Handling: Catching specific errors (FileNotFoundError, KeyError) and managing KeyboardInterrupt to save data safely. / Manejo de Excepciones: Capturar errores específicos y gestionar KeyboardInterrupt para guardar datos de forma segura.
 
-- Exiting a loop early with a keyword like "fin" / Salir de un bucle antes de tiempo con una palabra clave como "fin"
-
-- Using a flag (jugar) to control the main loop / Usar una bandera (jugar) para controlar el bucle principal
+- Refactoring: Splitting a large codebase into small, testable functions and separating UI from business logic. / Refactorización: Dividir un código grande en funciones pequeñas y separar la interfaz de la lógica de negocio.
 
 ## Author / Autor
+
 [dferreiro96]
 
 ## How to Run / Cómo Ejecutar
 
-```bash
 python Agenda_de_contactos.py
