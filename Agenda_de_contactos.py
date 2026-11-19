@@ -1,6 +1,7 @@
 import csv
 import json
 from datetime import date, datetime
+import shutil
 
 
 class Contacto:
@@ -107,7 +108,8 @@ class Agenda:
     def comprobar_si_un_contacto_tiene_etiqueta_en_especifico(self, nombre, etiqueta):
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre and etiqueta in contacto.etiquetas:
-                return bool
+                return True
+        return False
 
     def buscar_contacto_por_nombre(self, nombre):
         for contacto in self.lista_de_contactos:
@@ -143,7 +145,8 @@ class Agenda:
         if retorno:
             self.eliminar_todos_los_contactos()
             self.guardar_json()
-            return bool
+            return True
+        return False
 
     def eliminar_contactos_por_nombre(self, contacto):
         retorno = confirmacion_borrar_contactos(
@@ -152,7 +155,8 @@ class Agenda:
         if retorno:
             self.lista_de_contactos.remove(contacto)
             self.guardar_json()
-            return bool
+            return True
+        return False
 
     def modificar_nombre(self, contacto):
         nuevo_nombre = pedir_nombre()
@@ -160,7 +164,8 @@ class Agenda:
         if not repetido:
             contacto.nombre = nuevo_nombre
             self.guardar_json()
-            return bool
+            return True
+        return False
 
     def modificar_telefono(self, contacto):
         nuevo_numero = pedir_telefono()
@@ -169,7 +174,8 @@ class Agenda:
         if not repetido:
             contacto.telefono = nuevo_numero_formateado
             self.guardar_json()
-            return bool
+            return True
+        return False
 
     def modificar_correo_electronico(self, contacto):
         nuevo_email = pedir_correo_electronico()
@@ -177,7 +183,8 @@ class Agenda:
         if not repetido:
             contacto.correo_electronico = nuevo_email
             self.guardar_json()
-            return bool
+            return True
+        return False
 
     def modificar_fecha_de_cumpleaños(self, nombre):
         for contacto in self.lista_de_contactos:
@@ -185,7 +192,8 @@ class Agenda:
                 nuevo_fecha_de_cumpleaños = pedir_fecha_cumple()
                 contacto.cumpleaños = nuevo_fecha_de_cumpleaños
                 self.guardar_json()
-                return bool
+                return True
+        return False
 
     def mostrar_agenda(self):
         print("\nLa lista de contactos es la siguiente: \n")
@@ -238,7 +246,8 @@ class Agenda:
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre and contacto.etiquetas:
                 etiquetas = contacto.etiquetas
-                return bool(etiquetas)
+                return etiquetas
+            
 
     def convertir_a_diccionario(self):
         lista_de_diccionarios = []
@@ -337,7 +346,8 @@ class Agenda:
                 return lista_reconstituida
 
         except KeyError, TypeError, ValueError:
-            print("\nLos datos están corruptos. Se creará una nueva lista de contactos")
+            shutil.copy("Datos.json", "Datos.back")
+            print("\nLos datos están corruptos. Se guardó una copia de seguridad en Datos.back")
             return []
         except FileNotFoundError:
             print("\nNo existen datos previos. Se creará una nueva lista de contactos")
@@ -565,8 +575,7 @@ def modificar_fecha_de_cumpleaños(mi_agenda: Agenda, nombre):
 
 
 def modificar_generica(funcion, mensaje, mensaje2):
-    nuevo = funcion
-    if nuevo:
+    if funcion:
         print(f"\nHa editado {mensaje} correctamente.")
     else:
         print(f"\nYa existe un contacto con {mensaje2}")
@@ -574,7 +583,7 @@ def modificar_generica(funcion, mensaje, mensaje2):
 
 def modificar_etiquetas(mi_agenda: Agenda, nombre):
     tiene_etiqueta = mi_agenda.comprobar_si_un_contacto_tiene_etiquetas(nombre)
-    if tiene_etiqueta:
+    if tiene_etiqueta is not None:
         tiene_etiquetas(mi_agenda, nombre)
         return
     no_tiene_etiquetas(mi_agenda, nombre)
