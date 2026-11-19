@@ -13,6 +13,10 @@ class Contacto:
     def __str__(self):
         return f"Nombre: {self.nombre} Teléfono: {self.telefono} Dirección de correo electrónica: {self.correo_electronico}"
 
+    def devolver_tipo(self):
+        tipo = self.__class__.__name__
+        return tipo
+    
     def añadir_etiqueta(self):
         etiqueta = pedir_etiqueta()
         self.etiquetas.append(etiqueta)
@@ -32,9 +36,6 @@ class ContactoPersonal(Contacto):
         )
         return f"Nombre: {self.nombre}. Teléfono: {self.telefono}. Dirección de correo electrónica: {self.correo_electronico}. Fecha de cumpleaños: {cumpleaños_formateado}. Parentesco: {self.parentesco}. Etiquetas: {etiquetas_formateadas}"
 
-    def devolver_tipo(self):
-        tipo = self.__class__.__name__
-        return tipo
 
     def es_el_cumple(self):
         hoy = date.today()
@@ -51,21 +52,18 @@ class ContactoLaboral(Contacto):
         etiquetas_formateadas = (", ".join(self.etiquetas) if self.etiquetas else "Ninguna")
         return f"Nombre: {self.nombre}. Teléfono: {self.telefono}. Dirección de correo electrónica: {self.correo_electronico}. Empresa: {self.empresa}. Cargo: {self.cargo}. Etiquetas: {etiquetas_formateadas}"
 
-    def devolver_tipo(self):
-        tipo = self.__class__.__name__
-        return tipo
 
 
 class Agenda:
     def __init__(self):
         self.lista_de_contactos = self.descargar_datos()
 
-    def comprobar_si_un_contacto_existe(self, nombre):
+    def comprobar_si_un_contacto_existe(self):
+        nombre = pedir_nombre()
         for c in self.lista_de_contactos:
             if c.nombre == nombre:
                 return c
             
-        
 
     def comprobar_nombre(self, nombre):
         return bool(any(nombre == contacto.nombre for contacto in self.lista_de_contactos))
@@ -78,9 +76,16 @@ class Agenda:
     
     def agregar_contacto(self, nuevo_contacto: Contacto):
         self.lista_de_contactos.append(nuevo_contacto)
-        nuevo_contacto.añadir_etiqueta()
-        print(f"\nNuevo contacto añadido: {nuevo_contacto}\n")
-        return True
+        while True: 
+            añadir_etiqueta = input("\nDesea añadir una etiqueta al contacto (s/n)?: ") .lower() .strip()
+            if añadir_etiqueta in ("s", "si", "sí"):
+                nuevo_contacto.añadir_etiqueta()
+                break
+            elif añadir_etiqueta in ("no", "n"):
+                break
+            else:
+                print("\nOpción inválida")
+        
 
     def añadir_etiqueta(self, nombre, etiqueta):
         for c in self.lista_de_contactos:
@@ -110,21 +115,18 @@ class Agenda:
             
         for contacto in self.lista_de_contactos:
             if contacto.telefono == telefono_formateado:
-                return f"\n{contacto}"
-        return False
+                return contacto
+        return None
 
     def buscar_contactos_por_etiqueta(self, etiqueta):
         lista_con_etiquetas = []
-        encontrado = False
         for contacto in self.lista_de_contactos:
             if etiqueta in contacto.etiquetas:
                 lista_con_etiquetas.append(contacto)
-                encontrado = True
         lista_con_etiquetas.sort(key=lambda x: x.nombre)
-        for i, contacto in enumerate(lista_con_etiquetas, start=1):
-            print(f"\n{i}. {contacto}")
-        if not encontrado:
-            print("\nNo se encuentran contactos con esa etiqueta")
+        return lista_con_etiquetas
+
+            
 
     def eliminar_contactos(self):
         retorno = confirmacion_borrar_contactos("\n¿Está seguro que desea eliminar TODOS los contactos (s/n)?: ")
@@ -142,36 +144,30 @@ class Agenda:
             return bool
                 
     
-    def modificar_nombre(self, nombre):
-        for contacto in self.lista_de_contactos:
-            if contacto.nombre == nombre:
-                nuevo_nombre = pedir_nombre()
-                repetido = self.comprobar_nombre(nuevo_nombre)
-                if not repetido:
-                    contacto.nombre = nuevo_nombre
-                    self.guardar_json()
-                    return nuevo_nombre
+    def modificar_nombre(self, contacto):
+        nuevo_nombre = pedir_nombre()
+        repetido = self.comprobar_nombre(nuevo_nombre)
+        if not repetido:
+            contacto.nombre = nuevo_nombre
+            self.guardar_json()
+            return bool
 
-    def modificar_telefono(self, nombre):
-        for contacto in self.lista_de_contactos:
-            if contacto.nombre == nombre:
-                nuevo_numero = pedir_telefono()
-                nuevo_numero_formateado = formatear_numero_de_telefono(nuevo_numero)
-                repetido = self.comprobar_telefono(nuevo_numero_formateado)
-                if not repetido:
-                    contacto.telefono = nuevo_numero_formateado
-                    self.guardar_json()
-                    return bool
+    def modificar_telefono(self, contacto):
+        nuevo_numero = pedir_telefono()
+        nuevo_numero_formateado = formatear_numero_de_telefono(nuevo_numero)
+        repetido = self.comprobar_telefono(nuevo_numero_formateado)
+        if not repetido:
+            contacto.telefono = nuevo_numero_formateado
+            self.guardar_json()
+            return bool
 
-    def modificar_correo_electronico(self, nombre):
-        for contacto in self.lista_de_contactos:
-            if contacto.nombre == nombre:
-                nuevo_email = pedir_correo_electronico()
-                repetido = self.comprobar_correo(nuevo_email)
-                if not repetido:
-                    contacto.correo_electronico = nuevo_email
-                    self.guardar_json()
-                    return bool
+    def modificar_correo_electronico(self, contacto):
+        nuevo_email = pedir_correo_electronico()
+        repetido = self.comprobar_correo(nuevo_email)
+        if not repetido:
+            contacto.correo_electronico = nuevo_email
+            self.guardar_json()
+            return bool
 
     def modificar_fecha_de_cumpleaños(self, nombre):
         for contacto in self.lista_de_contactos:
@@ -196,7 +192,7 @@ class Agenda:
         contactos_laborales = []
         encontrado = False
         for contacto in self.lista_de_contactos:
-            if contacto.devolver_tipo() == "ContactoLaboral":
+            if isinstance(contacto, ContactoLaboral):
                 encontrado = True
                 contactos_laborales.append(contacto)
         if encontrado:
@@ -211,7 +207,7 @@ class Agenda:
         encontrado = False
         contactos_personales = []
         for contacto in self.lista_de_contactos:
-            if contacto.devolver_tipo() == "ContactoPersonal":
+            if isinstance(contacto, ContactoPersonal):
                 encontrado = True
                 contactos_personales.append(contacto)
         if encontrado:
@@ -255,7 +251,7 @@ class Agenda:
     def exportar_csv(self):
         try:
             with open(
-                "Agenda de contactos.csv", "w", encoding="utf-8", newline=""
+                "Agenda de contactos.csv", "w", encoding="utf-8-sig", newline=""
             ) as archivo:
                 columnas = [
                     "Nombre",
@@ -337,7 +333,7 @@ class Agenda:
         except json.JSONDecodeError:
             print("\nLos datos están corruptos. Se creará una nueva lista de contactos")
             return []
-        except FileNotFoundError, KeyError, TypeError:
+        except FileNotFoundError, KeyError, TypeError, ValueError:
             print("\nNo existen datos previos. Se creará una nueva lista de contactos")
             return []
 
@@ -460,7 +456,7 @@ def pedir_fecha_cumple():
             return fecha_valida
         except ValueError:
             print(
-                "\nError: Fecha no válida. Asegúrate de usar el formato DD/MM/AA y que la fecha exista."
+                "\nError: Fecha no válida. Asegúrate de usar el formato DD/MM y que la fecha exista."
             )
 
 
@@ -561,46 +557,34 @@ def modificar_fecha_de_cumpleaños(mi_agenda: Agenda, nombre):
     else:
         print("\nNo se le puede añadir fecha de cumpleaños a ese tipo de contacto")
 
-def modificar_correo(mi_agenda: Agenda, nombre):
-    nuevo_correo = mi_agenda.modificar_correo_electronico(nombre)
-    if nuevo_correo:
-        print("\nHa editado la dirección de correo electrónico correctamente.")
+def modificar_generica(funcion, mensaje, mensaje2):
+    nuevo = funcion
+    if nuevo:
+        print(f"\nHa editado {mensaje} correctamente.")
     else:
-        print("\nYa existe un contacto con esa dirección de correo electrónico")
-    
-def modificar_nombre(mi_agenda: Agenda, nombre):
-    nuevo_nombre = mi_agenda.modificar_nombre(nombre)
-    if nuevo_nombre is not None:
-        print(f"\nHa editado el nombre correctamente, ahora se llama {nuevo_nombre}")
-    else:
-        print("\nYa existe un contacto con ese nombre")
-        
-def modificar_telefono(mi_agenda: Agenda, nombre):
-    nuevo_telefono = mi_agenda.modificar_telefono(nombre)
-    if nuevo_telefono:
-        print("\nHa editado el número de teléfono correctamente.")
-    else:
-        print("\nYa existe un contacto con ese número de teléfono")
+        print(f"\nYa existe un contacto con {mensaje2}")  
 
 def modificar_etiquetas(mi_agenda: Agenda, nombre):
     tiene_etiqueta = mi_agenda.comprobar_si_un_contacto_tiene_etiquetas(nombre )
     if tiene_etiqueta:
         tiene_etiquetas(mi_agenda, nombre)
+        return
     no_tiene_etiquetas(mi_agenda, nombre)
         
         
 def gestionar_edicion_de_contactos(mi_agenda: Agenda):  
-    nombre = buscar_contacto_por_nombre(mi_agenda)
-    if nombre is not None:
+    nombre = pedir_nombre()
+    contacto = mi_agenda.buscar_contacto_por_nombre(nombre)
+    if contacto is not None:
         menu_editar_por()
         opcion = pedir_opcion([1, 2, 3, 4, 5, 6])
         match opcion:
             case 1:
-                modificar_nombre(mi_agenda, nombre)
+                modificar_generica(mi_agenda.modificar_nombre(contacto), "el nombre del contacto", "ese nombre")
             case 2:
-                modificar_telefono(mi_agenda, nombre)
+                modificar_generica(mi_agenda.modificar_telefono(contacto), "el número de teléfono", "ese número de teléfono")
             case 3:
-                modificar_correo(mi_agenda, nombre)
+                modificar_generica(mi_agenda.modificar_correo_electronico(contacto), "la dirección de correo electrónica", "esa dirección de correo electrónica")
             case 4:
                modificar_fecha_de_cumpleaños(mi_agenda, nombre)
             case 5:
@@ -618,18 +602,20 @@ def gestionar_busqueda_de_contactos(mi_agenda: Agenda):
         menu_filtar_contactos()
         opcion = pedir_opcion([1, 2, 3, 4])
         if opcion == 1:
-           contacto = buscar_contacto_por_nombre(mi_agenda) 
-           if contacto:
-               print(contacto)
-           else:
-               print("\nEl contacto no existe")             
+            opcion_1_busqueda_de_contactos_por_nombre(mi_agenda)
         elif opcion == 2:
             buscar_contacto_por_numero(mi_agenda)
         elif opcion == 3:
-            etiqueta = pedir_etiqueta()
-            mi_agenda.buscar_contactos_por_etiqueta(etiqueta)
+            opcion_3_busqueda_de_contactos_por_etiquetas(mi_agenda)
         else:
             return
+
+def opcion_1_busqueda_de_contactos_por_nombre(mi_agenda: Agenda):
+    contacto = mi_agenda.comprobar_si_un_contacto_existe()
+    if contacto:
+        print(contacto)
+    else:
+        print("\nEl contacto no existe") 
         
 def buscar_contacto_por_numero(mi_agenda: Agenda):
     numero = pedir_telefono()
@@ -641,20 +627,25 @@ def buscar_contacto_por_numero(mi_agenda: Agenda):
     else:
         print("\nContacto no existe")
                     
-def buscar_contacto_por_nombre(mi_agenda: Agenda):
-    nombre = pedir_nombre()
-    contacto_buscado = mi_agenda.buscar_contacto_por_nombre(
-        nombre
-    )
-    if contacto_buscado is not None:
-        return contacto_buscado.nombre
-
+    
+def opcion_3_busqueda_de_contactos_por_etiquetas(mi_agenda:Agenda):
+    etiqueta = pedir_etiqueta()
+    lista_de_contactos_con_la_etiqueta = mi_agenda.buscar_contactos_por_etiqueta(etiqueta)
+    if lista_de_contactos_con_la_etiqueta is not None:
+        for i, contacto in enumerate(lista_de_contactos_con_la_etiqueta, start=1):
+            print(f"\n{i}. {contacto}")
+    else:
+        print("\nNo se encuentran contactos con esa etiqueta")
+        
+    
+    
 def gestionar_mostrar_contactos(mi_agenda: Agenda):
     if not mi_agenda.lista_de_contactos:
         print("\nAún no ha guardado ningún contacto")
     else:
         menu_mostrar_tipo_de_contacto()
         opcion = pedir_opcion([1, 2, 3, 4])
+        
         if opcion == 1:
             mi_agenda.mostrar_agenda()
         elif opcion == 2:
@@ -673,6 +664,11 @@ def gestionar_agregar_contactos(mi_agenda: Agenda):
         print("\nYa existe un contacto con ese nombre")
         return
     telefono = pedir_telefono()
+    telefono_format = formatear_numero_de_telefono(telefono)
+    comprobar_telefono_repetido = mi_agenda.comprobar_telefono(telefono_format)
+    if comprobar_telefono_repetido:
+        print("\nYa existe un contacto con ese número de teléfono")
+        return
     if opcion == 1:
         contacto = pedir_datos_del_contacto_familiar(nombre, telefono)
         mi_agenda.agregar_contacto(contacto)
@@ -690,8 +686,7 @@ def gestionar_eliminar_contacto(mi_agenda: Agenda):
     if not mi_agenda.lista_de_contactos:
         print("\nAún no ha guardado ningún contacto")
     else:
-        nombre = pedir_nombre()
-        contacto = mi_agenda.comprobar_si_un_contacto_existe(nombre)
+        contacto = mi_agenda.comprobar_si_un_contacto_existe()
         if contacto is not None:
                 eliminado = mi_agenda.eliminar_contactos_por_nombre(contacto)
                 if eliminado:
