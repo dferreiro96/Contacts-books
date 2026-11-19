@@ -344,7 +344,7 @@ class Agenda:
                         lista_reconstituida.append(nuevo_contacto_personal)
                 return lista_reconstituida
 
-        except KeyError, TypeError, ValueError:
+        except (KeyError, TypeError, ValueError):
             shutil.copy("Datos.json", "Datos.back")
             print(
                 "\nLos datos están corruptos. Se guardó una copia de seguridad en Datos.back"
