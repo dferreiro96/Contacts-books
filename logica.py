@@ -1,4 +1,4 @@
-from Clases import Agenda, ContactoLaboral, ContactoPersonal
+from clases import Agenda, ContactoLaboral, ContactoPersonal
 from menus import (
     menu_añadir_etiquetas,
     menu_editar_etiquetas,

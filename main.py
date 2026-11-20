@@ -1,4 +1,18 @@
-def programa():
+from clases import Agenda
+from logica import (
+    gestionar_agregar_contactos,
+    gestionar_busqueda_de_contactos,
+    gestionar_edicion_de_contactos,
+    gestionar_eliminar_contacto,
+    gestionar_eliminar_todos_los_contactos,
+    gestionar_exportacion_a_csv,
+    gestionar_mostrar_contactos,
+)
+from menus import menu
+from utilidades import pedir_opcion
+
+
+def main():
     mi_agenda = None
     try:
         print("\nBienvenido a su agenda de contactos")
@@ -43,8 +57,6 @@ def programa():
         else:
             print("No se pudo guardar porque la agenda no llegó a iniciarse.")
             
-def main():
-    programa()
     print("\nHa salido satisfactoriamente del programa.\n")
 
 
