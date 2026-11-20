@@ -74,3 +74,14 @@ def pedir_opcion_añadir_etiqueta():
             return False
         else:
             print("\nOpción inválida")
+            
+def pedir_opcion(opciones):
+    while True:
+        try:
+            opcion = int(input("\nOpción: "))
+            if opcion in opciones:
+                return opcion
+            else:
+                print("\nOpción no válida")
+        except ValueError:
+            print("\nIntroduza un número válido")
