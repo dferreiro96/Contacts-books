@@ -83,21 +83,13 @@ class Agenda:
             )
         )
 
-    def agregar_contacto(self, nuevo_contacto: Contacto):
-        self.lista_de_contactos.append(nuevo_contacto)
-        while True:
-            añadir_etiqueta = (
-                input("\nDesea añadir una etiqueta al contacto (s/n)?: ")
-                .lower()
-                .strip()
-            )
-            if añadir_etiqueta in ("s", "si", "sí"):
-                nuevo_contacto.añadir_etiqueta()
-                break
-            elif añadir_etiqueta in ("no", "n"):
-                break
-            else:
-                print("\nOpción inválida")
+    def agregar_contacto(self, contacto: Contacto):
+        self.lista_de_contactos.append(contacto)
+        retorno = pedir_opcion_añadir_etiqueta()
+        if retorno:
+          contacto.añadir_etiqueta()
+          self.guardar_json()
+
 
     def añadir_etiqueta(self, nombre, etiqueta):
         for c in self.lista_de_contactos:
@@ -485,6 +477,19 @@ def pedir_parentesco():
         else:
             print("\nNo puede introducir números o caracteres especiales aquí\n")
 
+def pedir_opcion_añadir_etiqueta():
+    while True:
+        añadir_etiqueta = (
+            input("\nDesea añadir una etiqueta al contacto (s/n)?: ")
+            .lower()
+            .strip()
+        )
+        if añadir_etiqueta in ("s", "si", "sí"):  
+            return True
+        elif añadir_etiqueta in ("no", "n"):
+            return False
+        else:
+            print("\nOpción inválida")
 
 def menu():
     print("\n____MENU____\n")
