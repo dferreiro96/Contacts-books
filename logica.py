@@ -1,3 +1,25 @@
+from Clases import Agenda, ContactoLaboral, ContactoPersonal
+from menus import (
+    menu_añadir_etiquetas,
+    menu_editar_etiquetas,
+    menu_editar_por,
+    menu_filtar_contactos,
+    menu_mostrar_tipo_de_contacto,
+    menu_tipo_de_contacto,
+)
+from utilidades import (
+    pedir_cargo,
+    pedir_correo_electronico,
+    pedir_empresa,
+    pedir_etiqueta,
+    pedir_fecha_cumple,
+    pedir_nombre,
+    pedir_opcion,
+    pedir_parentesco,
+    pedir_telefono,
+)
+
+
 def confirmacion_borrar_contactos(mensaje):
     while True:
         seguro = input(mensaje).strip().lower()
