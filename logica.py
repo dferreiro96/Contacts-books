@@ -8,6 +8,7 @@ from menus import (
     menu_tipo_de_contacto,
 )
 from utilidades import (
+    formatear_numero_de_telefono,
     pedir_cargo,
     pedir_correo_electronico,
     pedir_empresa,
@@ -18,17 +19,6 @@ from utilidades import (
     pedir_parentesco,
     pedir_telefono,
 )
-
-
-def confirmacion_borrar_contactos(mensaje):
-    while True:
-        seguro = input(mensaje).strip().lower()
-        if seguro in ("s", "si", "sí"):
-            return True
-        elif seguro in ("n", "no"):
-            return False
-        else:
-            print("\nNo válido")
 
 
 def editar_etiquetas(mi_agenda: Agenda, nombre):
@@ -79,12 +69,6 @@ def eliminar_etiquetas(mi_agenda: Agenda, nombre):
     print(f"\nEtiquetas actuales de {nombre}\n")
     mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
     
-    
-def formatear_numero_de_telefono(telefono):
-    if len(telefono) == 8:
-        return f"+53 {telefono[:1]}-{telefono[1:4]}-{telefono[4:]}"
-    else:
-        return telefono
 
 
 def modificar_fecha_de_cumpleaños(mi_agenda: Agenda, nombre):

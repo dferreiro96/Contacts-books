@@ -3,8 +3,9 @@ import json
 import shutil
 from datetime import date, datetime
 
-from logica import confirmacion_borrar_contactos, formatear_numero_de_telefono
 from utilidades import (
+    confirmacion_borrar_contactos,
+    formatear_numero_de_telefono,
     pedir_correo_electronico,
     pedir_etiqueta,
     pedir_fecha_cumple,

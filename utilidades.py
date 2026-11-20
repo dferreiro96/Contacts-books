@@ -88,3 +88,20 @@ def pedir_opcion(opciones):
                 print("\nOpción no válida")
         except ValueError:
             print("\nIntroduza un número válido")
+            
+    
+def formatear_numero_de_telefono(telefono):
+    if len(telefono) == 8:
+        return f"+53 {telefono[:1]}-{telefono[1:4]}-{telefono[4:]}"
+    else:
+        return telefono
+    
+def confirmacion_borrar_contactos(mensaje):
+    while True:
+        seguro = input(mensaje).strip().lower()
+        if seguro in ("s", "si", "sí"):
+            return True
+        elif seguro in ("n", "no"):
+            return False
+        else:
+            print("\nNo válido")

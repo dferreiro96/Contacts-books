@@ -39,7 +39,9 @@ def main():
                 case 7:
                     gestionar_exportacion_a_csv(mi_agenda)
                 case 8:
-                    return
+                    break
+        print("\nHa salido satisfactoriamente del programa.\n")
+                
     except KeyboardInterrupt:
         print("\nSaliendo de emergencia por orden del usuario. \nGuardando datos")
         if mi_agenda is not None:
@@ -57,7 +59,7 @@ def main():
         else:
             print("No se pudo guardar porque la agenda no llegó a iniciarse.")
             
-    print("\nHa salido satisfactoriamente del programa.\n")
+
 
 
 if __name__ == "__main__":
