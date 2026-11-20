@@ -1,3 +1,19 @@
+import csv
+import json
+import shutil
+from datetime import date, datetime
+
+from logica import confirmacion_borrar_contactos, formatear_numero_de_telefono
+from utilidades import (
+    pedir_correo_electronico,
+    pedir_etiqueta,
+    pedir_fecha_cumple,
+    pedir_nombre,
+    pedir_opcion_añadir_etiqueta,
+    pedir_telefono,
+)
+
+
 class Contacto:
     def __init__(self, nombre, telefono, correo_electronico):
         self.nombre = nombre
