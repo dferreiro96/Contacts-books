@@ -55,10 +55,12 @@ def no_tiene_etiquetas(mi_agenda: Agenda, nombre):
     opcion = pedir_opcion([1])
     if opcion == 1:
         etiqueta = pedir_etiqueta()
-        mi_agenda.añadir_etiqueta(nombre, etiqueta)
-        print(f"\nSe ha añadido la etiqueta al contacto {nombre}")
-        print("\nEtiquetas del contacto\n")
-        mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+        etiqueta_a_añadir = mi_agenda.añadir_etiqueta(nombre, etiqueta)
+        if etiqueta_a_añadir:
+            print(f"\nSe ha añadido la etiqueta al contacto {nombre}")
+            print("\nEtiquetas del contacto\n")
+            mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+        
 
 
 def eliminar_etiquetas(mi_agenda: Agenda, nombre):
