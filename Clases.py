@@ -128,7 +128,7 @@ class Agenda:
                 f"+53 {str_telefono[:1]}-{str_telefono[1:4]}-{str_telefono[4:]}"
             )
         else:
-            telefono_formateado = telefono
+            telefono_formateado = str(telefono)
 
         for contacto in self.lista_de_contactos:
             if contacto.telefono == telefono_formateado:

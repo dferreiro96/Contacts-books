@@ -62,3 +62,7 @@ def test_buscar_contacto_por_numero(agenda_de_prueba):
     assert agenda_de_prueba.buscar_contacto_por_numero(12345) is None
     assert agenda_de_prueba.buscar_contacto_por_numero(123) is not None
     
+def test_modificar_nombre(agenda_de_prueba):
+    contacto = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
+    assert agenda_de_prueba.modificar_nombre(contacto, "María") == True
+    assert agenda_de_prueba.modificar_nombre(contacto, "Pedro") == False
