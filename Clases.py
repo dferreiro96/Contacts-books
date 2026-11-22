@@ -106,6 +106,8 @@ class Agenda:
             if c.nombre == nombre:
                 c.etiquetas.append(etiqueta)
                 self.guardar_json()
+                return True
+        return False
 
     def comprobar_si_un_contacto_tiene_etiqueta_en_especifico(self, nombre, etiqueta):
         for contacto in self.lista_de_contactos:

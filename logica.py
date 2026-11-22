@@ -29,11 +29,13 @@ def editar_etiquetas(mi_agenda: Agenda, nombre):
     if resultado:
         print("\nEl contacto ya tiene esa etiqueta")
         return
-    mi_agenda.añadir_etiqueta(nombre, etiqueta)
-    print(f"\nSe ha añadido la etiqueta al contacto {nombre}")
-    print("\nEtiquetas del contacto\n")
-    mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
-
+    etiqueta_a_añadir = mi_agenda.añadir_etiqueta(nombre, etiqueta)
+    if etiqueta_a_añadir:
+        print(f"\nSe ha añadido la etiqueta al contacto {nombre}")
+        print("\nEtiquetas del contacto\n")
+        mi_agenda.mostrar_etiquetas_de_un_contacto(nombre)
+    else:
+        print("\nContacto no existe")
 
 def tiene_etiquetas(mi_agenda: Agenda, nombre):
     print(f"\nEtiquetas actuales de {nombre}\n")
