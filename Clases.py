@@ -163,8 +163,7 @@ class Agenda:
             return True
         return False
 
-    def modificar_nombre(self, contacto):
-        nuevo_nombre = pedir_nombre()
+    def modificar_nombre(self, contacto, nuevo_nombre):
         repetido = self.comprobar_nombre(nuevo_nombre)
         if not repetido:
             contacto.nombre = nuevo_nombre
@@ -172,8 +171,7 @@ class Agenda:
             return True
         return False
 
-    def modificar_telefono(self, contacto):
-        nuevo_numero = pedir_telefono()
+    def modificar_telefono(self, contacto, nuevo_numero):
         nuevo_numero_formateado = formatear_numero_de_telefono(nuevo_numero)
         repetido = self.comprobar_telefono(nuevo_numero_formateado)
         if not repetido:
@@ -182,8 +180,7 @@ class Agenda:
             return True
         return False
 
-    def modificar_correo_electronico(self, contacto):
-        nuevo_email = pedir_correo_electronico()
+    def modificar_correo_electronico(self, contacto, nuevo_email):
         repetido = self.comprobar_correo(nuevo_email)
         if not repetido:
             contacto.correo_electronico = nuevo_email

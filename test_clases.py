@@ -6,7 +6,8 @@ from clases import Agenda, Contacto, ContactoLaboral, ContactoPersonal
 
 
 @pytest.fixture
-def agenda_de_prueba():
+def agenda_de_prueba(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     mi_agenda = Agenda()
     ana = ContactoLaboral("Ana", "123", "ewrf@.", "ergv", "ergf")
     pedro = ContactoPersonal("Pedro", "34456", "ertvg@.", "02/05/2000", "primo")
@@ -14,15 +15,16 @@ def agenda_de_prueba():
     return mi_agenda
 
 @pytest.fixture
-def contacto_de_prueba1():
+def contacto_de_prueba1(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     c = ContactoPersonal("Ana", "1234", "dfsg@.", date.today(), "prima")
     return c
 
 @pytest.fixture
-def contacto_de_prueba2():
+def contacto_de_prueba2(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     d = ContactoPersonal("Pedro", "1234", "dfsg@.", "04/08/2000", "primo")
     return d
-    
       
 def test_buscar_contacto_por_nombre_si_existe(agenda_de_prueba):
     assert agenda_de_prueba.buscar_contacto_por_nombre("Ana") is not None
@@ -47,3 +49,16 @@ def test_comprobar_telefono(agenda_de_prueba):
 def test_comprobar_correo(agenda_de_prueba):
     assert agenda_de_prueba.comprobar_correo("ewrf@.") is True
     assert agenda_de_prueba.comprobar_correo("ghbrtsh@ewrft.com") is False
+    
+def test_añadir_etiquetas(agenda_de_prueba):
+    assert agenda_de_prueba.añadir_etiqueta("Ana", "esposa") == True
+    assert agenda_de_prueba.añadir_etiqueta("Mateo", "esposa") == False
+    
+def test_comprobar_si_un_contacto_tiene_etiqueta_en_especifico(agenda_de_prueba):
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "ertgfewv") == False
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "ertgfewv") == False
+    
+def test_buscar_contacto_por_numero(agenda_de_prueba):
+    assert agenda_de_prueba.buscar_contacto_por_numero(12345) is None
+    assert agenda_de_prueba.buscar_contacto_por_numero(123) is not None
+    

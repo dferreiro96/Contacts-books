@@ -106,20 +106,23 @@ def gestionar_edicion_de_contactos(mi_agenda: Agenda):
         opcion = pedir_opcion([1, 2, 3, 4, 5, 6])
         match opcion:
             case 1:
+                nuevo_nombre = pedir_nombre()
                 modificar_generica(
-                    mi_agenda.modificar_nombre(contacto),
+                    mi_agenda.modificar_nombre(contacto, nuevo_nombre),
                     "el nombre del contacto",
                     "ese nombre",
                 )
             case 2:
+                nuevo_numero = pedir_telefono()
                 modificar_generica(
-                    mi_agenda.modificar_telefono(contacto),
+                    mi_agenda.modificar_telefono(contacto, nuevo_numero),
                     "el número de teléfono",
                     "ese número de teléfono",
                 )
             case 3:
+                nuevo_email = pedir_correo_electronico()
                 modificar_generica(
-                    mi_agenda.modificar_correo_electronico(contacto),
+                    mi_agenda.modificar_correo_electronico(contacto, nuevo_email),
                     "la dirección de correo electrónica",
                     "esa dirección de correo electrónica",
                 )
