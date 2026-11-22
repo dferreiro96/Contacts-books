@@ -32,5 +32,10 @@ def test_cumple_de_hoy(contacto_de_prueba1, contacto_de_prueba2):
     assert contacto_de_prueba1.es_el_cumple() == True
     assert contacto_de_prueba2.es_el_cumple() == False
     
-def test_comprobar_si_un_contacto_existe():
+def test_comprobar_si_un_contacto_existe(agenda_de_prueba):
+    assert agenda_de_prueba.comprobar_si_un_contacto_existe("Ana") is not None
+    assert agenda_de_prueba.comprobar_si_un_contacto_existe("Francisco") is None
     
+def test_comprobar_nombre(agenda_de_prueba):
+    assert agenda_de_prueba.comprobar_nombre("Ana") is True
+    assert agenda_de_prueba.comprobar_nombre("Julio") is False
