@@ -146,7 +146,8 @@ def gestionar_busqueda_de_contactos(mi_agenda: Agenda):
 
 
 def opcion_1_busqueda_de_contactos_por_nombre(mi_agenda: Agenda):
-    contacto = mi_agenda.comprobar_si_un_contacto_existe()
+    nombre = pedir_nombre()
+    contacto = mi_agenda.comprobar_si_un_contacto_existe(nombre)
     if contacto:
         print(contacto)
     else:
@@ -223,7 +224,8 @@ def gestionar_eliminar_contacto(mi_agenda: Agenda):
     if not mi_agenda.lista_de_contactos:
         print("\nAún no ha guardado ningún contacto")
     else:
-        contacto = mi_agenda.comprobar_si_un_contacto_existe()
+        nombre = pedir_nombre()
+        contacto = mi_agenda.comprobar_si_un_contacto_existe(nombre)
         if contacto is not None:
             eliminado = mi_agenda.eliminar_contactos_por_nombre(contacto)
             if eliminado:

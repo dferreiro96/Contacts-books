@@ -70,8 +70,7 @@ class Agenda:
     def __init__(self):
         self.lista_de_contactos = self.descargar_datos()
 
-    def comprobar_si_un_contacto_existe(self):
-        nombre = pedir_nombre()
+    def comprobar_si_un_contacto_existe(self, nombre):
         for c in self.lista_de_contactos:
             if c.nombre == nombre:
                 return c
@@ -118,6 +117,7 @@ class Agenda:
         for contacto in self.lista_de_contactos:
             if contacto.nombre == nombre:
                 return contacto
+        return None
 
     def buscar_contacto_por_numero(self, telefono):
         str_telefono = str(telefono)
