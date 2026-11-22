@@ -39,3 +39,11 @@ def test_comprobar_si_un_contacto_existe(agenda_de_prueba):
 def test_comprobar_nombre(agenda_de_prueba):
     assert agenda_de_prueba.comprobar_nombre("Ana") is True
     assert agenda_de_prueba.comprobar_nombre("Julio") is False
+    
+def test_comprobar_telefono(agenda_de_prueba):
+    assert agenda_de_prueba.comprobar_telefono("123") is True
+    assert agenda_de_prueba.comprobar_telefono("8974363") is False
+    
+def test_comprobar_correo(agenda_de_prueba):
+    assert agenda_de_prueba.comprobar_correo("ewrf@.") is True
+    assert agenda_de_prueba.comprobar_correo("ghbrtsh@ewrft.com") is False
