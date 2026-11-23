@@ -141,7 +141,7 @@ class Agenda:
             if etiqueta in contacto.etiquetas:
                 lista_con_etiquetas.append(contacto)
         lista_con_etiquetas.sort(key=lambda x: x.nombre)
-        return lista_con_etiquetas
+        return lista_con_etiquetas if lista_con_etiquetas else None
 
     def eliminar_contactos(self):
         retorno = confirmacion_borrar_contactos(
