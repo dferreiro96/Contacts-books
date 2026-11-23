@@ -28,7 +28,7 @@ def contacto_de_prueba2(tmp_path, monkeypatch):
     d = ContactoPersonal("Pedro", "1234", "dfsg@.", fecha_valida, "primo")
     return d
       
-def test_buscar_contacto_por_nombre_si_existe(agenda_de_prueba):
+def test_buscar_contacto_por_nombre(agenda_de_prueba):
     assert agenda_de_prueba.buscar_contacto_por_nombre("Ana") is not None
     assert agenda_de_prueba.buscar_contacto_por_nombre("Juan") is None
     
@@ -67,4 +67,9 @@ def test_buscar_contacto_por_numero(agenda_de_prueba):
 def test_modificar_nombre(agenda_de_prueba):
     contacto = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
     assert agenda_de_prueba.modificar_nombre(contacto, "María") == True
+    assert contacto.nombre == "María"
     assert agenda_de_prueba.modificar_nombre(contacto, "Pedro") == False
+    
+def test_modificar_telefono(agenda_de_prueba):
+    contacto = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
+    assert agenda_de_prueba.modificar_telefono(contacto, "") == True

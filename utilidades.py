@@ -28,7 +28,7 @@ def pedir_telefono():
         if not teléfono.isdigit():
             print("\nSolo números")
             continue
-        return teléfono
+        return str(teléfono)
 
 
 def pedir_correo_electronico():
