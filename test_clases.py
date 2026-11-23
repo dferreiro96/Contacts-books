@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 import pytest
 
@@ -9,8 +9,9 @@ from clases import Agenda, Contacto, ContactoLaboral, ContactoPersonal
 def agenda_de_prueba(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     mi_agenda = Agenda()
+    fecha_valida = datetime.strptime("04/06/2000", "%d/%m/%Y").date()
     ana = ContactoLaboral("Ana", "123", "ewrf@.", "ergv", "ergf")
-    pedro = ContactoPersonal("Pedro", "34456", "ertvg@.", "02/05/2000", "primo")
+    pedro = ContactoPersonal("Pedro", "34456", "ertvg@.", fecha_valida, "primo")
     mi_agenda.lista_de_contactos.extend([ana, pedro])
     return mi_agenda
 
@@ -23,7 +24,8 @@ def contacto_de_prueba1(tmp_path, monkeypatch):
 @pytest.fixture
 def contacto_de_prueba2(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
-    d = ContactoPersonal("Pedro", "1234", "dfsg@.", "04/08/2000", "primo")
+    fecha_valida = datetime.strptime("04/06/2000", "%d/%m/%Y").date()
+    d = ContactoPersonal("Pedro", "1234", "dfsg@.", fecha_valida, "primo")
     return d
       
 def test_buscar_contacto_por_nombre_si_existe(agenda_de_prueba):
@@ -56,7 +58,7 @@ def test_añadir_etiquetas(agenda_de_prueba):
     
 def test_comprobar_si_un_contacto_tiene_etiqueta_en_especifico(agenda_de_prueba):
     assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "ertgfewv") == False
-    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "ertgfewv") == False
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "esposa") == False
     
 def test_buscar_contacto_por_numero(agenda_de_prueba):
     assert agenda_de_prueba.buscar_contacto_por_numero(12345) is None
