@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from unittest.mock import patch
 
 import pytest
 
@@ -79,3 +80,15 @@ def test_modificar_correo_electronico(agenda_de_prueba):
     contacto = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
     assert agenda_de_prueba.modificar_correo_electronico(contacto, "ewrf@.") == False
     assert agenda_de_prueba.modificar_telefono(contacto, "sretgf@werfw.com") == True
+    
+def test_modificar_fecha_de_cumpleaños(agenda_de_prueba):
+    nueva_fecha = date(2000, 10, 27)
+    with patch("clases.pedir_fecha_cumple", return_value = nueva_fecha):
+        contacto_existe = agenda_de_prueba.modificar_fecha_de_cumpleaños("Pedro")
+        contacto_no_existe = agenda_de_prueba.modificar_fecha_de_cumpleaños("Daniel")
+        
+    assert contacto_existe == True
+    assert contacto_no_existe == False
+        
+    contacto_pedro = agenda_de_prueba.buscar_contacto_por_nombre("Pedro")
+    assert contacto_pedro.cumpleaños == nueva_fecha
