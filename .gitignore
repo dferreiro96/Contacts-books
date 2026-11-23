@@ -1,3 +1,5 @@
 __pycache__/
 *.csv
 *.json
+.pytest_cache/
+.coverage
