@@ -72,4 +72,10 @@ def test_modificar_nombre(agenda_de_prueba):
     
 def test_modificar_telefono(agenda_de_prueba):
     contacto = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
-    assert agenda_de_prueba.modificar_telefono(contacto, "") == True
+    assert agenda_de_prueba.modificar_telefono(contacto, "123") == False
+    assert agenda_de_prueba.modificar_telefono(contacto, "5673425") == True
+    
+def test_modificar_correo_electronico(agenda_de_prueba):
+    contacto = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
+    assert agenda_de_prueba.modificar_correo_electronico(contacto, "ewrf@.") == False
+    assert agenda_de_prueba.modificar_telefono(contacto, "sretgf@werfw.com") == True
