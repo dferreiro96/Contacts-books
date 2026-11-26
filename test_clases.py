@@ -174,3 +174,9 @@ def test_agregar_contacto(agenda_de_prueba, contacto_de_prueba1):
         agenda_de_prueba.agregar_contacto(contacto_de_prueba1, retorno= True)
     assert "etiqueta cualquiera" in contacto_de_prueba1.etiquetas
         
+def test_comprobar_si_un_contacto_tiene_etiquetas(agenda_de_prueba):
+    agenda_de_prueba.añadir_etiqueta("Ana", "esposa")
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiquetas("Ana") is not None
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiquetas("Pedro") is None
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiquetas("Daniel") is None
+    
