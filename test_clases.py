@@ -2,6 +2,8 @@ from datetime import date, datetime
 from unittest.mock import patch
 
 import pytest
+import os
+import csv
 
 from clases import Agenda, ContactoLaboral, ContactoPersonal
 
@@ -114,3 +116,23 @@ def test_convertir_a_diccionario(agenda_de_prueba):
                 assert agenda_de_prueba.convertir_a_diccionario() is not None
             else:
                 assert agenda_de_prueba.convertir_a_diccionario() == []
+                
+def test_exportar_csv(agenda_de_prueba):
+    assert agenda_de_prueba.exportar_csv() is True
+    nombre_del_archivo = "Agenda de contactos.csv"
+    assert os.path.exists(nombre_del_archivo) == True
+    with open (nombre_del_archivo, "r", encoding= "utf-8-sig") as archivo:
+        lector = csv.DictReader(archivo)
+        filas = list(lector)
+        assert len(filas) == len(agenda_de_prueba.lista_de_contactos)
+        primera_fila = filas[0]
+        assert primera_fila["Nombre"] == "Ana"
+        assert primera_fila["Número de teléfono"] == "123"
+        assert primera_fila["Empresa"] == "ergv" 
+        assert primera_fila["Parentesco"] == "-"
+        
+
+def test_exportar_csv_con_error_de_permiso(agenda_de_prueba):
+    with patch("csv.DictWriter", side_effect=PermissionError):
+        resultado = agenda_de_prueba.exportar_csv()
+    assert resultado is False
