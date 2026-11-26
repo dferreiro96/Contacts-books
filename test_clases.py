@@ -94,6 +94,11 @@ def test_modificar_fecha_de_cumpleaños(agenda_de_prueba):
     assert contacto_pedro.cumpleaños == nueva_fecha
     
 def test_buscar_contactos_por_etiqueta(agenda_de_prueba):
-    #agenda_de_prueba.añadir_etiqueta("Ana", "esposa")
+    agenda_de_prueba.añadir_etiqueta("Ana", "esposa")
     assert agenda_de_prueba.buscar_contactos_por_etiqueta("dfrrdwrw") is None
     assert agenda_de_prueba.buscar_contactos_por_etiqueta("esposa") is not None
+    
+def test_eliminar_todos_los_contactos(agenda_de_prueba):
+    assert agenda_de_prueba.eliminar_contactos(True) == True
+    assert agenda_de_prueba.eliminar_contactos(False) == False
+    

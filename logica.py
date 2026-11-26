@@ -8,6 +8,7 @@ from menus import (
     menu_tipo_de_contacto,
 )
 from utilidades import (
+    confirmacion_borrar_contactos,
     formatear_numero_de_telefono,
     pedir_cargo,
     pedir_correo_electronico,
@@ -248,7 +249,10 @@ def gestionar_eliminar_todos_los_contactos(mi_agenda: Agenda):
     if not mi_agenda.lista_de_contactos:
         print("\nAún no ha guardado ningún contacto")
     else:
-        eliminado = mi_agenda.eliminar_contactos()
+        retorno = confirmacion_borrar_contactos(
+            "\n¿Está seguro que desea eliminar TODOS los contactos (s/n)?: "
+        )
+        eliminado = mi_agenda.eliminar_contactos(retorno)
         if eliminado:
             print("\nSe han eliminado todos los contactos")
         else:

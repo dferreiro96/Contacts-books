@@ -140,10 +140,7 @@ class Agenda:
         lista_con_etiquetas.sort(key=lambda x: x.nombre)
         return lista_con_etiquetas if lista_con_etiquetas else None
 
-    def eliminar_contactos(self):
-        retorno = confirmacion_borrar_contactos(
-            "\n¿Está seguro que desea eliminar TODOS los contactos (s/n)?: "
-        )
+    def eliminar_contactos(self, retorno):
         if retorno:
             self.eliminar_todos_los_contactos()
             self.guardar_json()
