@@ -142,7 +142,7 @@ class Agenda:
 
     def eliminar_contactos(self, retorno):
         if retorno:
-            self.eliminar_todos_los_contactos()
+            self.lista_de_contactos.clear()
             self.guardar_json()
             return True
         return False
@@ -192,10 +192,7 @@ class Agenda:
         print("\nLa lista de contactos es la siguiente: \n")
         ordenados = sorted(self.lista_de_contactos, key=lambda x: x.nombre)
         for i, contacto in enumerate(ordenados, start=1):
-            print(f"\n{i}. {contacto}")
-
-    def eliminar_todos_los_contactos(self):
-        self.lista_de_contactos.clear()
+            print(f"\n{i}. {contacto}")  
 
     def mostrar_contactos_laborales(self):
         contactos_laborales = []
