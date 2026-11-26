@@ -6,12 +6,9 @@ from datetime import date, datetime
 from utilidades import (
     confirmacion_borrar_contactos,
     formatear_numero_de_telefono,
-    pedir_correo_electronico,
     pedir_etiqueta,
     pedir_fecha_cumple,
-    pedir_nombre,
     pedir_opcion_añadir_etiqueta,
-    pedir_telefono,
 )
 
 
