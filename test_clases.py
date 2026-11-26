@@ -136,3 +136,12 @@ def test_exportar_csv_con_error_de_permiso(agenda_de_prueba):
     with patch("csv.DictWriter", side_effect=PermissionError):
         resultado = agenda_de_prueba.exportar_csv()
     assert resultado is False
+    
+def test_guardar_y_descargar_datos(agenda_de_prueba):
+    assert agenda_de_prueba.guardar_json() is True
+    assert os.path.exists("Datos.json") == True
+    assert agenda_de_prueba.descargar_datos() is not None
+    with patch ("clases.open", side_effect= FileNotFoundError):
+        assert agenda_de_prueba.descargar_datos() == []
+    
+    

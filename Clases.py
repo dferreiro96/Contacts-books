@@ -252,6 +252,7 @@ class Agenda:
         datos = self.convertir_a_diccionario()
         with open("Datos.json", "w", encoding="utf-8") as archivo:
             json.dump(datos, archivo, ensure_ascii=False, indent=4)
+            return True
 
     def exportar_csv(self):
         try:
