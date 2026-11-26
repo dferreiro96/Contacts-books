@@ -7,7 +7,6 @@ from utilidades import (
     formatear_numero_de_telefono,
     pedir_etiqueta,
     pedir_fecha_cumple,
-    pedir_opcion_añadir_etiqueta,
 )
 
 
@@ -89,9 +88,7 @@ class Agenda:
             )
         )
 
-    def agregar_contacto(self, contacto: Contacto):
-        self.lista_de_contactos.append(contacto)
-        retorno = pedir_opcion_añadir_etiqueta()
+    def agregar_contacto(self, contacto: Contacto, retorno):
         if retorno:
             etiqueta = pedir_etiqueta()
             contacto.añadir_etiqueta(etiqueta)

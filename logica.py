@@ -19,6 +19,7 @@ from utilidades import (
     pedir_opcion,
     pedir_parentesco,
     pedir_telefono,
+    pedir_opcion_añadir_etiqueta
 )
 
 
@@ -218,7 +219,9 @@ def gestionar_agregar_contactos(mi_agenda: Agenda):
         return
     if opcion == 1:
         contacto = pedir_datos_del_contacto_familiar(nombre, telefono)
-        mi_agenda.agregar_contacto(contacto)
+        mi_agenda.lista_de_contactos.append(contacto)
+        retorno = pedir_opcion_añadir_etiqueta()
+        mi_agenda.agregar_contacto(contacto, retorno)
         mi_agenda.guardar_json()
         print(f"\nContacto {contacto.nombre} agregado correctamente")
     elif opcion == 2:
