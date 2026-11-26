@@ -16,7 +16,8 @@ def agenda_de_prueba(tmp_path, monkeypatch):
     fecha_valida = datetime.strptime("04/06/2000", "%d/%m/%Y").date()
     ana = ContactoLaboral("Ana", "123", "ewrf@.", "ergv", "ergf")
     pedro = ContactoPersonal("Pedro", "34456", "ertvg@.", fecha_valida, "primo")
-    mi_agenda.lista_de_contactos.extend([ana, pedro])
+    juan = ContactoLaboral("Juan", "+53 5-365-4891", "erctf@tg.vo", "bhrd", "ervg")
+    mi_agenda.lista_de_contactos.extend([ana, pedro, juan])
     return mi_agenda
 
 @pytest.fixture
@@ -34,7 +35,7 @@ def contacto_de_prueba2(tmp_path, monkeypatch):
       
 def test_buscar_contacto_por_nombre(agenda_de_prueba):
     assert agenda_de_prueba.buscar_contacto_por_nombre("Ana") is not None
-    assert agenda_de_prueba.buscar_contacto_por_nombre("Juan") is None
+    assert agenda_de_prueba.buscar_contacto_por_nombre("Judszf") is None
     
 def test_cumple_de_hoy(contacto_de_prueba1, contacto_de_prueba2):
     assert contacto_de_prueba1.es_el_cumple() == True
@@ -69,6 +70,7 @@ def test_comprobar_si_un_contacto_tiene_etiqueta_en_especifico(agenda_de_prueba)
 def test_buscar_contacto_por_numero(agenda_de_prueba):
     assert agenda_de_prueba.buscar_contacto_por_numero(12345) is None
     assert agenda_de_prueba.buscar_contacto_por_numero(123) is not None
+    assert agenda_de_prueba.buscar_contacto_por_numero(53654891) is not None
     
 def test_modificar_nombre(agenda_de_prueba):
     contacto = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
