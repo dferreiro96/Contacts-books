@@ -4,7 +4,6 @@ import shutil
 from datetime import date, datetime
 
 from utilidades import (
-    confirmacion_borrar_contactos,
     formatear_numero_de_telefono,
     pedir_etiqueta,
     pedir_fecha_cumple,
@@ -26,9 +25,9 @@ class Contacto:
         tipo = self.__class__.__name__
         return tipo
 
-    def añadir_etiqueta(self):
-        etiqueta = pedir_etiqueta()
+    def añadir_etiqueta(self, etiqueta):
         self.etiquetas.append(etiqueta)
+        return True
 
 
 class ContactoPersonal(Contacto):
@@ -94,8 +93,9 @@ class Agenda:
         self.lista_de_contactos.append(contacto)
         retorno = pedir_opcion_añadir_etiqueta()
         if retorno:
-          contacto.añadir_etiqueta()
-          self.guardar_json()
+            etiqueta = pedir_etiqueta()
+            contacto.añadir_etiqueta(etiqueta)
+            self.guardar_json()
 
 
     def añadir_etiqueta(self, nombre, etiqueta):

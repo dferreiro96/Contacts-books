@@ -6,7 +6,7 @@ import os
 import csv
 import json
 
-from clases import Agenda, ContactoLaboral, ContactoPersonal
+from clases import Agenda, ContactoLaboral, ContactoPersonal, Contacto
 
 
 @pytest.fixture
@@ -160,3 +160,6 @@ def test_descargar_datos_corruptos(agenda_de_prueba, tmp_path, monkeypatch):
         json.dump([{"nombre": "Ana", "telefono": "123", "correo_electronico": "a@a.com",
             "Tipo": "ContactoPersonal", "cumpleaños": "123", "parentesco": "x"}], f)
         assert agenda_de_prueba.descargar_datos() == []
+        
+def test_añadir_etiqueta(contacto_de_prueba1):
+    assert contacto_de_prueba1.añadir_etiqueta("etiqueta de prueba") == True
