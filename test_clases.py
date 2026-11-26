@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 import os
 import csv
+import json
 
 from clases import Agenda, ContactoLaboral, ContactoPersonal
 
@@ -144,4 +145,18 @@ def test_guardar_y_descargar_datos(agenda_de_prueba):
     with patch ("clases.open", side_effect= FileNotFoundError):
         assert agenda_de_prueba.descargar_datos() == []
     
-    
+def test_descargar_datos_corruptos(agenda_de_prueba, tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with open("Datos.json", "w", encoding="utf-8") as a:
+        json.dump([{"nombre": "Ana"}], a)
+        assert agenda_de_prueba.descargar_datos() == []
+        
+    with open("Datos.json", "w", encoding="utf-8") as f:
+        json.dump([{"nombre": "Ana", "telefono": "123", "correo_electronico": "a@a.com",
+            "Tipo": "ContactoPersonal", "cumpleaños": "99/99", "parentesco": "x"}], f)
+        assert agenda_de_prueba.descargar_datos() == []
+        
+    with open("Datos.json", "w", encoding="utf-8") as f:
+        json.dump([{"nombre": "Ana", "telefono": "123", "correo_electronico": "a@a.com",
+            "Tipo": "ContactoPersonal", "cumpleaños": "123", "parentesco": "x"}], f)
+        assert agenda_de_prueba.descargar_datos() == []
