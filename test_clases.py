@@ -163,3 +163,9 @@ def test_descargar_datos_corruptos(agenda_de_prueba, tmp_path, monkeypatch):
         
 def test_añadir_etiqueta(contacto_de_prueba1):
     assert contacto_de_prueba1.añadir_etiqueta("etiqueta de prueba") == True
+    
+def test_agregar_contacto(agenda_de_prueba, contacto_de_prueba1):
+    with patch ("clases.pedir_etiqueta", return_value="etiqueta cualquiera"):
+        agenda_de_prueba.agregar_contacto(contacto_de_prueba1, retorno= True)
+    assert "etiqueta cualquiera" in contacto_de_prueba1.etiquetas
+        
