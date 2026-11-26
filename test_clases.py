@@ -1,12 +1,12 @@
+import csv
+import json
+import os
 from datetime import date, datetime
 from unittest.mock import patch
 
 import pytest
-import os
-import csv
-import json
 
-from clases import Agenda, ContactoLaboral, ContactoPersonal, Contacto
+from clases import Agenda, Contacto, ContactoLaboral, ContactoPersonal
 
 
 @pytest.fixture
@@ -22,14 +22,14 @@ def agenda_de_prueba(tmp_path, monkeypatch):
 @pytest.fixture
 def contacto_de_prueba1(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
-    c = ContactoPersonal("Ana", "1234", "dfsg@.", date.today(), "prima")
+    c = ContactoPersonal("Anairis", "1234", "dfsg@.", date.today(), "prima")
     return c
 
 @pytest.fixture
 def contacto_de_prueba2(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     fecha_valida = datetime.strptime("04/06/2000", "%d/%m/%Y").date()
-    d = ContactoPersonal("Pedro", "1234", "dfsg@.", fecha_valida, "primo")
+    d = ContactoPersonal("Pedro Julio", "1234", "dfsg@.", fecha_valida, "primo")
     return d
       
 def test_buscar_contacto_por_nombre(agenda_de_prueba):
@@ -61,8 +61,10 @@ def test_añadir_etiquetas(agenda_de_prueba):
     assert agenda_de_prueba.añadir_etiqueta("Mateo", "esposa") == False
     
 def test_comprobar_si_un_contacto_tiene_etiqueta_en_especifico(agenda_de_prueba):
+    agenda_de_prueba.añadir_etiqueta("Ana", "esposa")
     assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "ertgfewv") == False
-    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "esposa") == False
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Ana", "esposa") == True
+    assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiqueta_en_especifico("Pedro", "esposa") == False
     
 def test_buscar_contacto_por_numero(agenda_de_prueba):
     assert agenda_de_prueba.buscar_contacto_por_numero(12345) is None
