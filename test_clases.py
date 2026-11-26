@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from clases import Agenda, Contacto, ContactoLaboral, ContactoPersonal
+from clases import Agenda, ContactoLaboral, ContactoPersonal
 
 
 @pytest.fixture
@@ -107,5 +107,10 @@ def test_eliminar_contacto(agenda_de_prueba):
         if c:
             assert agenda_de_prueba.eliminar_contactos_por_nombre(c, True) == True
             assert agenda_de_prueba.eliminar_contactos_por_nombre(c, False) == False
-
             
+def test_convertir_a_diccionario(agenda_de_prueba):
+    for c in agenda_de_prueba.lista_de_contactos:
+            if c:
+                assert agenda_de_prueba.convertir_a_diccionario() is not None
+            else:
+                assert agenda_de_prueba.convertir_a_diccionario() == []
