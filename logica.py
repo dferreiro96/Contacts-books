@@ -235,7 +235,10 @@ def gestionar_eliminar_contacto(mi_agenda: Agenda):
         nombre = pedir_nombre()
         contacto = mi_agenda.comprobar_si_un_contacto_existe(nombre)
         if contacto is not None:
-            eliminado = mi_agenda.eliminar_contactos_por_nombre(contacto)
+            retorno = confirmacion_borrar_contactos(
+            "\n¿Está seguro que desea eliminar el contacto (s/n)?: "
+        )
+            eliminado = mi_agenda.eliminar_contactos_por_nombre(contacto, retorno)
             if eliminado:
                 print(f"\nSe ha eliminado el contacto {contacto.nombre}")
                 return

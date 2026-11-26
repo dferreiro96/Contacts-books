@@ -102,3 +102,10 @@ def test_eliminar_todos_los_contactos(agenda_de_prueba):
     assert agenda_de_prueba.eliminar_contactos(True) == True
     assert agenda_de_prueba.eliminar_contactos(False) == False
     
+def test_eliminar_contacto(agenda_de_prueba):
+    for c in agenda_de_prueba.lista_de_contactos:
+        if c:
+            assert agenda_de_prueba.eliminar_contactos_por_nombre(c, True) == True
+            assert agenda_de_prueba.eliminar_contactos_por_nombre(c, False) == False
+
+            

@@ -147,10 +147,7 @@ class Agenda:
             return True
         return False
 
-    def eliminar_contactos_por_nombre(self, contacto):
-        retorno = confirmacion_borrar_contactos(
-            "\n¿Está seguro que desea eliminar el contacto (s/n)?: "
-        )
+    def eliminar_contactos_por_nombre(self, contacto, retorno):
         if retorno:
             self.lista_de_contactos.remove(contacto)
             self.guardar_json()
