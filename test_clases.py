@@ -20,6 +20,11 @@ def agenda_de_prueba(tmp_path, monkeypatch):
     mi_agenda.lista_de_contactos.extend([ana, pedro, juan])
     return mi_agenda
 
+@pytest.fixture
+def agenda_de_prueba_vacia(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    mi_agenda = Agenda()
+    return mi_agenda
 
 @pytest.fixture
 def contacto_de_prueba1(tmp_path, monkeypatch):
@@ -268,6 +273,13 @@ def test_mostar_contactos_laborales(agenda_de_prueba,capsys):
     capturado = capsys.readouterr()
     assert "Lista de contactos laborales:" in capturado.out
     assert "Ana" in capturado.out
+    assert "Pedro" not in capturado.out
+    
+def test_mostar_contactos_laborales_con_agenda_vacia(agenda_de_prueba_vacia,capsys):
+    agenda_de_prueba_vacia.mostrar_contactos_laborales()
+    capturado = capsys.readouterr()
+    assert "No se encontraron contactos laborales" in capturado.out
+    assert "Ana" not in capturado.out
     assert "Pedro" not in capturado.out
     
 def test_mostar_contactos_personales(agenda_de_prueba,capsys):
