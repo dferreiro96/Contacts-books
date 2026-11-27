@@ -17,9 +17,9 @@ from utilidades import (
     pedir_fecha_cumple,
     pedir_nombre,
     pedir_opcion,
+    pedir_opcion_añadir_etiqueta,
     pedir_parentesco,
     pedir_telefono,
-    pedir_opcion_añadir_etiqueta
 )
 
 
@@ -96,8 +96,9 @@ def modificar_etiquetas(mi_agenda: Agenda, nombre):
     tiene_etiqueta = mi_agenda.comprobar_si_un_contacto_tiene_etiquetas(nombre)
     if tiene_etiqueta is not None:
         tiene_etiquetas(mi_agenda, nombre)
-        return
+        return True
     no_tiene_etiquetas(mi_agenda, nombre)
+    return False
 
 
 def gestionar_edicion_de_contactos(mi_agenda: Agenda):
