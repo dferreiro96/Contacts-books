@@ -28,8 +28,10 @@ def test_modificar_etiquetas_si_no_tiene_etiquetas(agenda_de_prueba):
             assert modificar_etiquetas(agenda_de_prueba, "Pedro") == False
             
 def test_gestionar_edicion_de_nombre_de_contacto_que_existe(agenda_de_prueba):
-    with patch("logica.pedir_nombre", return_value="Ana"):
+    with patch("logica.pedir_nombre", side_effect=["Ana", "Francisco"]):  # noqa: SIM117
         with patch("logica.pedir_opcion", return_value=1):
-            with patch("logica.pedir_nombre", return_value="Francisco"):
-                assert gestionar_edicion_de_contactos(agenda_de_prueba) == True
+            assert gestionar_edicion_de_contactos(agenda_de_prueba) == True
     
+def test_gestionar_edicion_de_nombre_de_contacto_que_no_existe(agenda_de_prueba):
+    with patch("logica.pedir_nombre", return_value="Maria"):
+        assert gestionar_edicion_de_contactos(agenda_de_prueba) == False
