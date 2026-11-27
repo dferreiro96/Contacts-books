@@ -243,3 +243,10 @@ def test_comprobar_si_un_contacto_tiene_etiquetas(agenda_de_prueba):
     assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiquetas("Ana") is not None
     assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiquetas("Pedro") is None
     assert agenda_de_prueba.comprobar_si_un_contacto_tiene_etiquetas("Daniel") is None
+    
+def test_str_contacto_laboral(agenda_de_prueba):
+    ana = agenda_de_prueba.buscar_contacto_por_nombre("Ana")
+    texto = str(ana)
+    assert "Nombre: Ana" in texto
+    assert "Teléfono: 123" in texto
+    
