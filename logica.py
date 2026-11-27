@@ -123,6 +123,7 @@ def gestionar_edicion_de_contactos(mi_agenda: Agenda):
                     "el número de teléfono",
                     "ese número de teléfono",
                 )
+                return True
             case 3:
                 nuevo_email = pedir_correo_electronico()
                 modificar_generica(
