@@ -115,6 +115,7 @@ def gestionar_edicion_de_contactos(mi_agenda: Agenda):
                     "el nombre del contacto",
                     "ese nombre",
                 )
+                return True
             case 2:
                 nuevo_numero = pedir_telefono()
                 modificar_generica(
@@ -137,6 +138,7 @@ def gestionar_edicion_de_contactos(mi_agenda: Agenda):
                 return
     else:
         print("\nContacto no existe")
+        return False
 
 
 def gestionar_busqueda_de_contactos(mi_agenda: Agenda):

@@ -1,7 +1,8 @@
 import pytest
 from clases import Agenda, ContactoLaboral, ContactoPersonal
 from datetime import datetime
-from logica import modificar_etiquetas
+from logica import modificar_etiquetas, gestionar_edicion_de_contactos
+from utilidades import pedir_nombre
 from unittest.mock import patch
 
 @pytest.fixture
@@ -25,4 +26,10 @@ def test_modificar_etiquetas_si_no_tiene_etiquetas(agenda_de_prueba):
     with patch("logica.pedir_opcion", return_value=1):
         with patch("logica.pedir_etiqueta", return_value= "otra etiqueta de prueba"):
             assert modificar_etiquetas(agenda_de_prueba, "Pedro") == False
+            
+def test_gestionar_edicion_de_nombre_de_contacto_que_existe(agenda_de_prueba):
+    with patch("logica.pedir_nombre", return_value="Ana"):
+        with patch("logica.pedir_opcion", return_value=1):
+            with patch("logica.pedir_nombre", return_value="Francisco"):
+                assert gestionar_edicion_de_contactos(agenda_de_prueba) == True
     
