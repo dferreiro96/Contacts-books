@@ -268,3 +268,9 @@ def test_mostar_contactos_laborales(agenda_de_prueba,capsys):
     capturado = capsys.readouterr()
     assert "Lista de contactos laborales:" in capturado.out
     assert "Ana" in capturado.out
+    
+def test_mostar_contactos_personales(agenda_de_prueba,capsys):
+    agenda_de_prueba.mostrar_contactos_personales()
+    capturado = capsys.readouterr()
+    assert "Lista de contactos familiares:" in capturado.out
+    assert "Pedro" in capturado.out
