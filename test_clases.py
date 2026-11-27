@@ -130,11 +130,13 @@ def test_modificar_correo_electronico(agenda_de_prueba):
 def test_modificar_fecha_de_cumpleaños(agenda_de_prueba):
     nueva_fecha = date(2000, 10, 27)
     with patch("clases.pedir_fecha_cumple", return_value=nueva_fecha):
+        contacto_laboral = agenda_de_prueba.modificar_fecha_de_cumpleaños("Juan")
         contacto_existe = agenda_de_prueba.modificar_fecha_de_cumpleaños("Pedro")
         contacto_no_existe = agenda_de_prueba.modificar_fecha_de_cumpleaños("Daniel")
 
     assert contacto_existe == True
     assert contacto_no_existe == False
+    assert contacto_laboral == False
 
     contacto_pedro = agenda_de_prueba.buscar_contacto_por_nombre("Pedro")
     assert contacto_pedro.cumpleaños == nueva_fecha
