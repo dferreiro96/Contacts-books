@@ -255,3 +255,10 @@ def test_str_contacto_personal(agenda_de_prueba):
     texto = str(pedro)
     assert "Nombre: Pedro" in texto
     assert "Teléfono: 34456" in texto
+
+def test_mostrar_agenda(agenda_de_prueba, capsys):
+    agenda_de_prueba.mostrar_agenda()
+    capturado = capsys.readouterr()
+    assert "La lista de contactos es la siguiente:" in capturado.out
+    assert "Ana" in capturado.out
+    assert "Pedro" in capturado.out
