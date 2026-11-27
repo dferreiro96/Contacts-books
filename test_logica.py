@@ -15,8 +15,14 @@ def agenda_de_prueba(tmp_path, monkeypatch):
     mi_agenda.lista_de_contactos.extend([ana, pedro, juan])
     return mi_agenda
 
-def test_modificar_etiquetas(agenda_de_prueba):
+def test_modificar_etiquetas_si_tiene_etiquetas(agenda_de_prueba):
     agenda_de_prueba.añadir_etiqueta("Ana", "etiqueta de prueba")
     with patch ("logica.pedir_opcion", return_value=1):
         with patch("logica.pedir_etiqueta", return_value= "otra etiqueta de prueba"):
             assert modificar_etiquetas(agenda_de_prueba, "Ana") == True
+            
+def test_modificar_etiquetas_si_no_tiene_etiquetas(agenda_de_prueba):
+    with patch("logica.pedir_opcion", return_value=1):
+        with patch("logica.pedir_etiqueta", return_value= "otra etiqueta de prueba"):
+            assert modificar_etiquetas(agenda_de_prueba, "Pedro") == False
+    
