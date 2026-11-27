@@ -131,6 +131,7 @@ def gestionar_edicion_de_contactos(mi_agenda: Agenda):
                     "la dirección de correo electrónica",
                     "esa dirección de correo electrónica",
                 )
+                return True
             case 4:
                 modificar_fecha_de_cumpleaños(mi_agenda, nombre)
             case 5:
