@@ -27,15 +27,13 @@ def agenda_de_prueba_vacia(tmp_path, monkeypatch):
     return mi_agenda
 
 @pytest.fixture
-def contacto_de_prueba1(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
+def contacto_de_prueba1():
     c = ContactoPersonal("Anairis", "1234", "dfsg@.", date.today(), "prima")
     return c
 
 
 @pytest.fixture
-def contacto_de_prueba2(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
+def contacto_de_prueba2():
     fecha_valida = datetime.strptime("04/06/2000", "%d/%m/%Y").date()
     d = ContactoPersonal("Pedro Julio", "1234", "dfsg@.", fecha_valida, "primo")
     return d
