@@ -250,3 +250,8 @@ def test_str_contacto_laboral(agenda_de_prueba):
     assert "Nombre: Ana" in texto
     assert "Teléfono: 123" in texto
     
+def test_str_contacto_personal(agenda_de_prueba):
+    pedro = agenda_de_prueba.buscar_contacto_por_nombre("Pedro")
+    texto = str(pedro)
+    assert "Nombre: Pedro" in texto
+    assert "Teléfono: 34456" in texto
