@@ -80,4 +80,4 @@ Un programa de línea de comandos en Python para gestionar una agenda de contact
 
 ## How to Run / Cómo Ejecutar
 
-python Agenda_de_contactos.py
+python main.py
