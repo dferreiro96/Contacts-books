@@ -275,12 +275,18 @@ def test_mostar_contactos_laborales(agenda_de_prueba,capsys):
     assert "Ana" in capturado.out
     assert "Pedro" not in capturado.out
     
-def test_mostar_contactos_laborales_con_agenda_vacia(agenda_de_prueba_vacia,capsys):
+def test_mostar_contactos_con_agenda_vacia(agenda_de_prueba_vacia,capsys):
     agenda_de_prueba_vacia.mostrar_contactos_laborales()
-    capturado = capsys.readouterr()
-    assert "No se encontraron contactos laborales" in capturado.out
-    assert "Ana" not in capturado.out
-    assert "Pedro" not in capturado.out
+    laborales = capsys.readouterr()
+    assert "No se encontraron contactos laborales" in laborales.out
+    assert "Ana" not in laborales.out
+    assert "Pedro" not in laborales.out
+    agenda_de_prueba_vacia.mostrar_contactos_personales()
+    personales = capsys.readouterr()
+    assert "No se encontraron contactos familiares" in personales.out
+    assert "Ana" not in personales.out
+    assert "Pedro" not in personales.out
+    
     
 def test_mostar_contactos_personales(agenda_de_prueba,capsys):
     agenda_de_prueba.mostrar_contactos_personales()
